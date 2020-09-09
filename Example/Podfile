@@ -1,0 +1,11 @@
+use_frameworks!
+
+target 'VisualMatic_Example' do
+  pod 'VisualMatic', :path => '../'
+
+  target 'VisualMatic_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end
