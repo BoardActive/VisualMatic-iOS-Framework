@@ -1,0 +1,22 @@
+{
+  "name": "VisualMatic",
+  "version": "0.1.0",
+  "summary": "A short description of VisualMatic.",
+  "description": "TODO: Add long description of the pod here.",
+  "homepage": "https://github.com/innovify/VisualMatic",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "innovify": "krishna.solanki@innovify.in"
+  },
+  "source": {
+    "git": "https://github.com/innovify/VisualMatic.git",
+    "tag": "0.1.0"
+  },
+  "platforms": {
+    "ios": "8.0"
+  },
+  "source_files": "VisualMatic/Classes/**/*"
+}

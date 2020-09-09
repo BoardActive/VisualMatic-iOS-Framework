@@ -1,0 +1,6 @@
+framework module VisualMatic {
+  umbrella header "VisualMatic-umbrella.h"
+
+  export *
+  module * { export * }
+}

@@ -40,12 +40,12 @@
 		607FACEA1AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		607FACEB1AFB9204008FA782 /* Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests.swift; sourceTree = "<group>"; };
 		62885A9D02E754EF453CB74C /* Pods-VisualMatic_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VisualMatic_Example.release.xcconfig"; path = "Target Support Files/Pods-VisualMatic_Example/Pods-VisualMatic_Example.release.xcconfig"; sourceTree = "<group>"; };
-		6CCDD566096A79C26CCC2C4F /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; name = README.md; path = ../README.md; sourceTree = "<group>"; };
+		6CCDD566096A79C26CCC2C4F /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		755BE2A23C610FDDACBE4767 /* Pods-VisualMatic_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VisualMatic_Example.debug.xcconfig"; path = "Target Support Files/Pods-VisualMatic_Example/Pods-VisualMatic_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		7868E9035DA95461AE5362FA /* Pods_VisualMatic_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_VisualMatic_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		797DD56F3DE20818C3388163 /* VisualMatic.podspec */ = {isa = PBXFileReference; includeInIndex = 1; name = VisualMatic.podspec; path = ../VisualMatic.podspec; sourceTree = "<group>"; };
+		797DD56F3DE20818C3388163 /* VisualMatic.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = VisualMatic.podspec; path = ../VisualMatic.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		BF466F2A5C474EE883B4027F /* Pods-VisualMatic_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VisualMatic_Tests.release.xcconfig"; path = "Target Support Files/Pods-VisualMatic_Tests/Pods-VisualMatic_Tests.release.xcconfig"; sourceTree = "<group>"; };
-		CF6D4EDC8F3B6E1556A176EC /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
+		CF6D4EDC8F3B6E1556A176EC /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		D646645233A8E7195E1A395F /* Pods_VisualMatic_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_VisualMatic_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -147,7 +147,6 @@
 				288DE07D32AC06BC4A3C94DC /* Pods-VisualMatic_Tests.debug.xcconfig */,
 				BF466F2A5C474EE883B4027F /* Pods-VisualMatic_Tests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -227,6 +226,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);

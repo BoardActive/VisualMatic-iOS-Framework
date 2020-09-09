@@ -1,0 +1,16 @@
+PODS:
+  - VisualMatic (0.1.0)
+
+DEPENDENCIES:
+  - VisualMatic (from `../`)
+
+EXTERNAL SOURCES:
+  VisualMatic:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  VisualMatic: b2762ab2130f03860f35d5946957ddbef059e6b3
+
+PODFILE CHECKSUM: 10ec585e6c826b58dd7e0fbedd6c7554475d1159
+
+COCOAPODS: 1.8.4
