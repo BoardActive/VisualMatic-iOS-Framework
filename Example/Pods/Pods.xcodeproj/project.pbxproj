@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1369BB460F423E316EC1C2DE7FE3F0F9 /* ReplaceMe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 666BA771F6428AB2AB5DB5B33E0CC05B /* ReplaceMe.swift */; };
 		18B59EA20AD9DA7E31B24278603619C8 /* Pods-VisualMatic_Tests-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 7461914DE6A8DDED0B480B974728657F /* Pods-VisualMatic_Tests-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		25779DC155963DA0E3E73463A094D71E /* Pods-VisualMatic_Example-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = C35FD60C83872DF3D39E32DB44A0DFB9 /* Pods-VisualMatic_Example-dummy.m */; };
 		29D9B1FC61A8B82D0D3334B6F0D6C90C /* Pods-VisualMatic_Example-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 79C7F8EA8D85F6B90BCDF34067BAA8EC /* Pods-VisualMatic_Example-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -16,6 +15,8 @@
 		7F01777486B37964D110F2BB40DA37FF /* VisualMatic-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = B621A642AA743BB73392E8934BFD7597 /* VisualMatic-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		93C8255328D18589A7375D560535AFC8 /* VisualMatic-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = E227FC79BB76B0CA95D9CCBE7207AE95 /* VisualMatic-dummy.m */; };
 		CDE7D51B0CA54F16DC61C43EA72C0C5B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3212113385A8FBBDB272BD23C409FF61 /* Foundation.framework */; };
+		F132DE992642A2BD00E55F82 /* UIUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = F132DE972642A2BD00E55F82 /* UIUtilities.swift */; };
+		F132DE9A2642A2BD00E55F82 /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F132DE982642A2BD00E55F82 /* CameraViewController.swift */; };
 		FB98C420D33D6FBD78E304ACC4CACE99 /* Pods-VisualMatic_Tests-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 671180F41DCC051B9BA4B4C4758749DC /* Pods-VisualMatic_Tests-dummy.m */; };
 /* End PBXBuildFile section */
 
@@ -39,8 +40,8 @@
 /* Begin PBXFileReference section */
 		07AF905F9F0DB56A3F7D82088687BE09 /* Pods-VisualMatic_Example-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-VisualMatic_Example-acknowledgements.plist"; sourceTree = "<group>"; };
 		12303162A9C5D7D91834DA72CFDEB7B1 /* VisualMatic-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "VisualMatic-prefix.pch"; sourceTree = "<group>"; };
-		1CF8946EACAD70FBE1EBEBCF976792FF /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; path = LICENSE; sourceTree = "<group>"; };
-		2C8F90660B841FB3E1A2FA67FEA7660A /* Pods_VisualMatic_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_VisualMatic_Example.framework; path = "Pods-VisualMatic_Example.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1CF8946EACAD70FBE1EBEBCF976792FF /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		2C8F90660B841FB3E1A2FA67FEA7660A /* Pods_VisualMatic_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_VisualMatic_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2FB49E83561FC89AAF58D4268523176F /* Pods-VisualMatic_Example-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-VisualMatic_Example-frameworks.sh"; sourceTree = "<group>"; };
 		3212113385A8FBBDB272BD23C409FF61 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.2.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		3727EBC1E0EACBF699F27972576D3FAF /* Pods-VisualMatic_Tests-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-VisualMatic_Tests-Info.plist"; sourceTree = "<group>"; };
@@ -48,16 +49,15 @@
 		463D9ECB9DDB74DF3247C1024F2494E8 /* Pods-VisualMatic_Example-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-VisualMatic_Example-acknowledgements.markdown"; sourceTree = "<group>"; };
 		52198D778F2A8DA7B8E222D1372EDEA3 /* VisualMatic.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = VisualMatic.xcconfig; sourceTree = "<group>"; };
 		6214BBD6576435AE78297B85A2767964 /* Pods-VisualMatic_Example.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-VisualMatic_Example.modulemap"; sourceTree = "<group>"; };
-		666BA771F6428AB2AB5DB5B33E0CC05B /* ReplaceMe.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ReplaceMe.swift; path = VisualMatic/Classes/ReplaceMe.swift; sourceTree = "<group>"; };
 		671180F41DCC051B9BA4B4C4758749DC /* Pods-VisualMatic_Tests-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-VisualMatic_Tests-dummy.m"; sourceTree = "<group>"; };
 		6CCB894F7B786979892DB507C5E3F66B /* Pods-VisualMatic_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-VisualMatic_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		7461914DE6A8DDED0B480B974728657F /* Pods-VisualMatic_Tests-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-VisualMatic_Tests-umbrella.h"; sourceTree = "<group>"; };
 		79C7F8EA8D85F6B90BCDF34067BAA8EC /* Pods-VisualMatic_Example-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-VisualMatic_Example-umbrella.h"; sourceTree = "<group>"; };
-		7DB73E59DAC30E2E35B27377041ACC1D /* VisualMatic.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = VisualMatic.framework; path = VisualMatic.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		7DB73E59DAC30E2E35B27377041ACC1D /* VisualMatic.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = VisualMatic.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8B49B825E10319122C6B1C9D05B567E9 /* Pods-VisualMatic_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-VisualMatic_Tests.release.xcconfig"; sourceTree = "<group>"; };
-		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		A96F971D8CBECDEEFB0278C726CBE37E /* Pods-VisualMatic_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-VisualMatic_Example.debug.xcconfig"; sourceTree = "<group>"; };
-		AD698098B4CB1A5648D995185EDA53F9 /* VisualMatic.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; path = VisualMatic.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		AD698098B4CB1A5648D995185EDA53F9 /* VisualMatic.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; path = VisualMatic.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		B56946D9B7CFE55C4A42AB611211388B /* VisualMatic.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = VisualMatic.modulemap; sourceTree = "<group>"; };
 		B621A642AA743BB73392E8934BFD7597 /* VisualMatic-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "VisualMatic-umbrella.h"; sourceTree = "<group>"; };
 		C1AC4F572B2C5E4F7264C22E43FAD861 /* Pods-VisualMatic_Tests-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-VisualMatic_Tests-acknowledgements.plist"; sourceTree = "<group>"; };
@@ -66,9 +66,11 @@
 		E227FC79BB76B0CA95D9CCBE7207AE95 /* VisualMatic-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "VisualMatic-dummy.m"; sourceTree = "<group>"; };
 		E3A76EF992DBA93CD732BC73012B9F94 /* Pods-VisualMatic_Tests-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-VisualMatic_Tests-acknowledgements.markdown"; sourceTree = "<group>"; };
 		E4B2128B792D512595168979EF2D64C2 /* Pods-VisualMatic_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-VisualMatic_Example.release.xcconfig"; sourceTree = "<group>"; };
+		F132DE972642A2BD00E55F82 /* UIUtilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIUtilities.swift; sourceTree = "<group>"; };
+		F132DE982642A2BD00E55F82 /* CameraViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
 		FB4747BB9DAE130FC885D697A5CC48D0 /* Pods-VisualMatic_Example-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-VisualMatic_Example-Info.plist"; sourceTree = "<group>"; };
-		FC006B63AC73EB645120B3C219E3142D /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; path = README.md; sourceTree = "<group>"; };
-		FD0B52C964A89ABACD65317314942E64 /* Pods_VisualMatic_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_VisualMatic_Tests.framework; path = "Pods-VisualMatic_Tests.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		FC006B63AC73EB645120B3C219E3142D /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		FD0B52C964A89ABACD65317314942E64 /* Pods_VisualMatic_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_VisualMatic_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -150,7 +152,7 @@
 		8D1A9F2C61312BEC2172544966B33F7F /* VisualMatic */ = {
 			isa = PBXGroup;
 			children = (
-				666BA771F6428AB2AB5DB5B33E0CC05B /* ReplaceMe.swift */,
+				F132DE962642A2BD00E55F82 /* Source */,
 				C0DADFB0EF802E996F4094CD97DC6CE1 /* Pod */,
 				5D08188D0F8930948CC904C5BFA4B213 /* Support Files */,
 			);
@@ -219,6 +221,16 @@
 				C0834CEBB1379A84116EF29F93051C60 /* iOS */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		F132DE962642A2BD00E55F82 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				F132DE972642A2BD00E55F82 /* UIUtilities.swift */,
+				F132DE982642A2BD00E55F82 /* CameraViewController.swift */,
+			);
+			name = Source;
+			path = VisualMatic/Source;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -365,8 +377,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1369BB460F423E316EC1C2DE7FE3F0F9 /* ReplaceMe.swift in Sources */,
+				F132DE992642A2BD00E55F82 /* UIUtilities.swift in Sources */,
 				93C8255328D18589A7375D560535AFC8 /* VisualMatic-dummy.m in Sources */,
+				F132DE9A2642A2BD00E55F82 /* CameraViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -587,8 +600,7 @@
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRIP_INSTALLED_PRODUCT = NO;
-				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_VERSION = 5.0;
 				SYMROOT = "${SRCROOT}/../build";
 			};

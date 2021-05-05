@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import VisualMatic
 
 class ViewController: UIViewController {
 
