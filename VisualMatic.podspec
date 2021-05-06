@@ -18,7 +18,7 @@ Pod::Spec.new do |s|
 
   s.ios.deployment_target = '11.0'
   s.swift_version         = '5.0'
-  s.source_files = 'VisualMatic/Source/**/*.{swift,h,m,storyboard}'
+  s.source_files = 'VisualMatic/**/*.{swift,h,m}'
   s.static_framework = true
   s.resources = 'VisualMatic/**/*.{png,jpeg,jpg,storyboard,xib,xcassets}'
 
