@@ -16,16 +16,22 @@
 
 import AVFoundation
 import CoreVideo
-import MLKit
+import MLKitCommon
+import MLKitObjectDetectionCustom
+import MLKitVision
+import MLKitTextRecognition
+import BAKit
+
 
 @objc(CameraViewController)
 public class CameraViewController: UIViewController {
     private let detectors: [Detector] = [ .onDeviceObjectCustomProminentWithClassifier, .onDeviceObjectCustomMultipleWithClassifier]
+    @IBOutlet var imgv: UIImageView!
+    @IBOutlet var btnClose: UIButton!
+    @IBOutlet var btnText: UIButton!
+    @IBOutlet var btnObject: UIButton!
+    @IBOutlet var tblObj: UITableView!
     private var currentDetector: Detector = .onDeviceObjectCustomMultipleWithClassifier
-//    @IBOutlet var tblObj: UITableView!
-    
-    public var capturedImage: UIImage!
-
     private var isUsingFrontCamera = false
     private var previewLayer: AVCaptureVideoPreviewLayer!
     private lazy var captureSession = AVCaptureSession()
@@ -61,7 +67,7 @@ public class CameraViewController: UIViewController {
 
     override public func viewDidLoad() {
         super.viewDidLoad()
-//        tblObj.isHidden = true
+        tblObj.isHidden = true
         previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
         setUpPreviewOverlayView()
         setUpAnnotationOverlayView()
@@ -81,7 +87,7 @@ public class CameraViewController: UIViewController {
 
     override public func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        previewLayer.frame = self.view.frame
+        previewLayer.frame = cameraView.frame
     }
 
   // MARK: On-Device Detections
@@ -247,23 +253,23 @@ public class CameraViewController: UIViewController {
   }
 
   private func setUpPreviewOverlayView() {
-    self.view.addSubview(previewOverlayView)
+      cameraView.addSubview(previewOverlayView)
       NSLayoutConstraint.activate([
-          previewOverlayView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-          previewOverlayView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor),
-          previewOverlayView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-          previewOverlayView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-          previewOverlayView.topAnchor.constraint(equalTo: self.view.topAnchor)
+          previewOverlayView.centerXAnchor.constraint(equalTo: cameraView.centerXAnchor),
+          previewOverlayView.centerYAnchor.constraint(equalTo: cameraView.centerYAnchor),
+          previewOverlayView.leadingAnchor.constraint(equalTo: cameraView.leadingAnchor),
+          previewOverlayView.trailingAnchor.constraint(equalTo: cameraView.trailingAnchor),
+          previewOverlayView.topAnchor.constraint(equalTo: cameraView.topAnchor)
       ])
   }
 
     private func setUpAnnotationOverlayView() {
-        self.view.addSubview(annotationOverlayView)
+        cameraView.addSubview(annotationOverlayView)
         NSLayoutConstraint.activate([
-            annotationOverlayView.topAnchor.constraint(equalTo: self.view.topAnchor),
-            annotationOverlayView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            annotationOverlayView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            annotationOverlayView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+            annotationOverlayView.topAnchor.constraint(equalTo: cameraView.topAnchor),
+            annotationOverlayView.leadingAnchor.constraint(equalTo: cameraView.leadingAnchor),
+            annotationOverlayView.trailingAnchor.constraint(equalTo: cameraView.trailingAnchor),
+            annotationOverlayView.bottomAnchor.constraint(equalTo: cameraView.bottomAnchor),
         ])
     }
     
@@ -275,6 +281,7 @@ public class CameraViewController: UIViewController {
         for annotationView in annotationOverlayView.subviews {
             if annotationView.frame.contains(location) {
                 print("GOT")
+                btnClose.isHidden = false
                 stopSession()
                 let image3 = self.previewOverlayView.image!
                 var fr = annotationView.frame
@@ -283,8 +290,7 @@ public class CameraViewController: UIViewController {
                 } else {
                     fr.origin.y =  fr.origin.y-40
                 }
-                
-                capturedImage =  image3.croppedInRect(rect: fr)
+                imgv.image =  image3.croppedInRect(rect: fr)
                 self.postLocal(brand: "Rolex")
                 break
             }
@@ -292,30 +298,30 @@ public class CameraViewController: UIViewController {
     }
     
     
-    fileprivate func getHeaders() -> [String: String]? {
-
-        /*
-        guard let tokenString = UserDefaults.standard.object(forKey: String.HeaderValues.FCMToken) as? String else {
-            return nil
-        }*/
-
-
-        let headers: [String: String] = [
-            String.HeaderKeys.AcceptEncodingHeader: String.HeaderValues.GzipDeflate,
-            String.HeaderKeys.AcceptHeader: String.HeaderValues.WildCards,
-            String.HeaderKeys.AppKeyHeader:APP_KEY,
-            String.HeaderKeys.AppIdHeader: APP_ID,
-            String.HeaderKeys.AppVersionHeader: String.HeaderValues.AppVersion,
-            String.HeaderKeys.CacheControlHeader: String.HeaderValues.NoCache,
-            String.HeaderKeys.ConnectionHeader: String.HeaderValues.KeepAlive,
-            String.HeaderKeys.ContentTypeHeader: String.HeaderValues.ApplicationJSON,
-            String.HeaderKeys.DeviceOSHeader: String.HeaderValues.iOS,
-            String.HeaderKeys.DeviceOSVersionHeader: String.HeaderValues.DeviceOSVersion,
-            String.HeaderKeys.IsTestApp: "1",
-            String.HeaderKeys.UUIDHeader: UIDevice.current.identifierForVendor!.uuidString,
-        ]
-        return headers
-    }
+//    fileprivate func getHeaders() -> [String: String]? {
+//
+//        /*
+//        guard let tokenString = UserDefaults.standard.object(forKey: String.HeaderValues.FCMToken) as? String else {
+//            return nil
+//        }*/
+//
+//
+//        let headers: [String: String] = [
+//            String.HeaderKeys.AcceptEncodingHeader: String.HeaderValues.GzipDeflate,
+//            String.HeaderKeys.AcceptHeader: String.HeaderValues.WildCards,
+//            String.HeaderKeys.AppKeyHeader:APP_KEY,
+//            String.HeaderKeys.AppIdHeader: APP_ID,
+//            String.HeaderKeys.AppVersionHeader: String.HeaderValues.AppVersion,
+//            String.HeaderKeys.CacheControlHeader: String.HeaderValues.NoCache,
+//            String.HeaderKeys.ConnectionHeader: String.HeaderValues.KeepAlive,
+//            String.HeaderKeys.ContentTypeHeader: String.HeaderValues.ApplicationJSON,
+//            String.HeaderKeys.DeviceOSHeader: String.HeaderValues.iOS,
+//            String.HeaderKeys.DeviceOSVersionHeader: String.HeaderValues.DeviceOSVersion,
+//            String.HeaderKeys.IsTestApp: "1",
+//            String.HeaderKeys.UUIDHeader: UIDevice.current.identifierForVendor!.uuidString,
+//        ]
+//        return headers
+//    }
     
     
     func postLocal(brand: String) {
@@ -327,7 +333,7 @@ public class CameraViewController: UIViewController {
             self.view.bringSubviewToFront(activityView!)
         }
         self.activityView?.startAnimating()
-        let headers = getHeaders()
+        let headers = BoardActive.client.getHeaders()
         print(headers)
         let Url = String(format: "https://dev-api.boardactive.com/mobile/v1/scans")
         ////print(Url)
@@ -367,18 +373,18 @@ public class CameraViewController: UIViewController {
                    print(brand)
                    self.arrOffers = (json["messages"] as! [[String : Any]])
                    print(self.arrOffers)
-//                   DispatchQueue.main.async {
-//                       if (self.arrOffers != nil) && self.arrOffers!.count > 0 {
-//                            self.tblObj.isHidden = false
-//                           self.tblObj.reloadData()
-//                       }
-//
-//                   }
+                   DispatchQueue.main.async {
+                       if (self.arrOffers != nil) && self.arrOffers!.count > 0 {
+                            self.tblObj.isHidden = false
+                           self.tblObj.reloadData()
+                       }
+                  
+                   }
                } catch {
                    ////print(error)
                }
                DispatchQueue.main.async {
-                self.activityView?.stopAnimating()
+               self.activityView?.stopAnimating()
                }
            }
         }.resume()
@@ -482,12 +488,20 @@ public class CameraViewController: UIViewController {
     return normalizedPoint
   }
     
-    public func closeCamera() {
-//        tblObj.isHidden = true
-        capturedImage = UIImage.init()
-        startSession()
+     @IBAction func btnClose(_ sender: Any) {
+         tblObj.isHidden = true
+         imgv.image = UIImage.init()
+         btnClose.isHidden = true
+         startSession()
+     }
+    
+    
+
+    @IBAction func objectClick(_ sender: Any) {
     }
     
+     @IBAction func textClick(_ sender: Any) {
+    }
 }
 
 // MARK: AVCaptureVideoDataOutputSampleBufferDelegate
