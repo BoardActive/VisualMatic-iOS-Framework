@@ -22,6 +22,19 @@
 	<string>1</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>App wants to use camera for scanning photos</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>App wants to access device location</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>App wants to access device location</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+		<string>location</string>
+		<string>processing</string>
+		<string>remote-notification</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

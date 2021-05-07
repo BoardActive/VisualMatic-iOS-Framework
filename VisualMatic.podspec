@@ -22,13 +22,6 @@ Pod::Spec.new do |s|
   s.static_framework = true
   s.resources = 'VisualMatic/**/*.{png,jpeg,jpg,storyboard,xib,xcassets}'
 
-#   s.resource_bundles = {
-#     'VisualMatic' => ['VisualMatic/**/*.{storyboard,lproj}']
-#   }
-
-  # s.public_header_files = 'Pod/Classes/**/*.h'
-  # s.frameworks = 'UIKit', 'MapKit'
-  # s.dependency 'AFNetworking', '~> 2.3'
   s.dependency 'BAKit-iOS', '~> 2.0.11'
   s.dependency 'Firebase/Messaging'
   s.dependency 'GoogleMLKit/BarcodeScanning', '~> 2.1.0'

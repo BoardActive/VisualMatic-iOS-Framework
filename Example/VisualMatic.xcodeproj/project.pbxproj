@@ -8,13 +8,17 @@
 
 /* Begin PBXBuildFile section */
 		607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD51AFB9204008FA782 /* AppDelegate.swift */; };
-		607FACD81AFB9204008FA782 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD71AFB9204008FA782 /* ViewController.swift */; };
 		607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 607FACD91AFB9204008FA782 /* Main.storyboard */; };
 		607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDC1AFB9204008FA782 /* Images.xcassets */; };
 		607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDE1AFB9204008FA782 /* LaunchScreen.xib */; };
 		607FACEC1AFB9204008FA782 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACEB1AFB9204008FA782 /* Tests.swift */; };
 		83A1D303DED703A616761354 /* Pods_VisualMatic_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D646645233A8E7195E1A395F /* Pods_VisualMatic_Example.framework */; };
 		A8D6E1E664CE93C9910C5D2C /* Pods_VisualMatic_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7868E9035DA95461AE5362FA /* Pods_VisualMatic_Tests.framework */; };
+		F100570C2643BD360011199A /* bird.tflite in Resources */ = {isa = PBXBuildFile; fileRef = F100570B2643BD360011199A /* bird.tflite */; };
+		F10057F2264417720011199A /* logo.tflite in Resources */ = {isa = PBXBuildFile; fileRef = F10057F1264417720011199A /* logo.tflite */; };
+		F199C4E42642ABAC00437B70 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F199C4E32642ABAC00437B70 /* GoogleService-Info.plist */; };
+		F1FB3CFF2642C83F00F3B3B4 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1FB3CFE2642C83F00F3B3B4 /* HomeViewController.swift */; };
+		F1FB3D162642C97000F3B3B4 /* ScannerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1FB3D152642C97000F3B3B4 /* ScannerViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -32,7 +36,6 @@
 		607FACD01AFB9204008FA782 /* VisualMatic_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VisualMatic_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACD41AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		607FACD51AFB9204008FA782 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		607FACD71AFB9204008FA782 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		607FACDA1AFB9204008FA782 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		607FACDC1AFB9204008FA782 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		607FACDF1AFB9204008FA782 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
@@ -47,6 +50,12 @@
 		BF466F2A5C474EE883B4027F /* Pods-VisualMatic_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VisualMatic_Tests.release.xcconfig"; path = "Target Support Files/Pods-VisualMatic_Tests/Pods-VisualMatic_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		CF6D4EDC8F3B6E1556A176EC /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		D646645233A8E7195E1A395F /* Pods_VisualMatic_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_VisualMatic_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		F100570B2643BD360011199A /* bird.tflite */ = {isa = PBXFileReference; lastKnownFileType = file; path = bird.tflite; sourceTree = "<group>"; };
+		F10057ED2643EC0A0011199A /* VisualMatic_Example.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = VisualMatic_Example.entitlements; sourceTree = "<group>"; };
+		F10057F1264417720011199A /* logo.tflite */ = {isa = PBXFileReference; lastKnownFileType = file; path = logo.tflite; sourceTree = "<group>"; };
+		F199C4E32642ABAC00437B70 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		F1FB3CFE2642C83F00F3B3B4 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
+		F1FB3D152642C97000F3B3B4 /* ScannerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannerViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,6 +81,7 @@
 		607FACC71AFB9204008FA782 = {
 			isa = PBXGroup;
 			children = (
+				F10057ED2643EC0A0011199A /* VisualMatic_Example.entitlements */,
 				607FACF51AFB993E008FA782 /* Podspec Metadata */,
 				607FACD21AFB9204008FA782 /* Example for VisualMatic */,
 				607FACE81AFB9204008FA782 /* Tests */,
@@ -93,8 +103,8 @@
 		607FACD21AFB9204008FA782 /* Example for VisualMatic */ = {
 			isa = PBXGroup;
 			children = (
+				F1FB3D102642C93A00F3B3B4 /* Scenes */,
 				607FACD51AFB9204008FA782 /* AppDelegate.swift */,
-				607FACD71AFB9204008FA782 /* ViewController.swift */,
 				607FACD91AFB9204008FA782 /* Main.storyboard */,
 				607FACDC1AFB9204008FA782 /* Images.xcassets */,
 				607FACDE1AFB9204008FA782 /* LaunchScreen.xib */,
@@ -107,6 +117,9 @@
 		607FACD31AFB9204008FA782 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				F199C4E32642ABAC00437B70 /* GoogleService-Info.plist */,
+				F100570B2643BD360011199A /* bird.tflite */,
+				F10057F1264417720011199A /* logo.tflite */,
 				607FACD41AFB9204008FA782 /* Info.plist */,
 			);
 			name = "Supporting Files";
@@ -150,6 +163,31 @@
 			path = Pods;
 			sourceTree = "<group>";
 		};
+		F1FB3D102642C93A00F3B3B4 /* Scenes */ = {
+			isa = PBXGroup;
+			children = (
+				F1FB3D122642C95500F3B3B4 /* Scanner */,
+				F1FB3D112642C94300F3B3B4 /* Home */,
+			);
+			name = Scenes;
+			sourceTree = "<group>";
+		};
+		F1FB3D112642C94300F3B3B4 /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				F1FB3CFE2642C83F00F3B3B4 /* HomeViewController.swift */,
+			);
+			name = Home;
+			sourceTree = "<group>";
+		};
+		F1FB3D122642C95500F3B3B4 /* Scanner */ = {
+			isa = PBXGroup;
+			children = (
+				F1FB3D152642C97000F3B3B4 /* ScannerViewController.swift */,
+			);
+			name = Scanner;
+			sourceTree = "<group>";
+		};
 		F33AF4E7A8A8E065DAEACB13 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -170,7 +208,8 @@
 				607FACCC1AFB9204008FA782 /* Sources */,
 				607FACCD1AFB9204008FA782 /* Frameworks */,
 				607FACCE1AFB9204008FA782 /* Resources */,
-				F9AE65947133C706A2FB6E3C /* [CP] Embed Pods Frameworks */,
+				E6BEB8F7D3BABFD212B09BAA /* [CP] Embed Pods Frameworks */,
+				BAFF134FB4AB0913E7745F3E /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -212,15 +251,14 @@
 				TargetAttributes = {
 					607FACCF1AFB9204008FA782 = {
 						CreatedOnToolsVersion = 6.3.1;
-						DevelopmentTeam = X446564LMN;
+						DevelopmentTeam = DLP7NL6GNK;
 						LastSwiftMigration = 0900;
 						ProvisioningStyle = Manual;
 					};
 					607FACE41AFB9204008FA782 = {
 						CreatedOnToolsVersion = 6.3.1;
-						DevelopmentTeam = PN8MASZ3PS;
 						LastSwiftMigration = 0900;
-						ProvisioningStyle = Manual;
+						ProvisioningStyle = Automatic;
 						TestTargetID = 607FACCF1AFB9204008FA782;
 					};
 				};
@@ -251,6 +289,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */,
+				F100570C2643BD360011199A /* bird.tflite in Resources */,
+				F199C4E42642ABAC00437B70 /* GoogleService-Info.plist in Resources */,
+				F10057F2264417720011199A /* logo.tflite in Resources */,
 				607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */,
 				607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */,
 			);
@@ -310,18 +351,68 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		F9AE65947133C706A2FB6E3C /* [CP] Embed Pods Frameworks */ = {
+		BAFF134FB4AB0913E7745F3E /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-VisualMatic_Example/Pods-VisualMatic_Example-resources.sh",
+				"${PODS_CONFIGURATION_BUILD_DIR}/MLKitFaceDetection/GoogleMVFaceDetectorResources.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/MLKitImageLabeling/MLKitImageLabelingResources.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/MLKitObjectDetection/MLKitObjectDetectionResources.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/MLKitObjectDetectionCommon/MLKitObjectDetectionCommonResources.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/MLKitTextRecognition/GoogleMVTextDetectorResources.bundle",
+				"${BUILT_PRODUCTS_DIR}/VisualMatic/VisualMatic.framework/Main_Framework.storyboardc",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleMVFaceDetectorResources.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MLKitImageLabelingResources.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MLKitObjectDetectionResources.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MLKitObjectDetectionCommonResources.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleMVTextDetectorResources.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Main_Framework.storyboardc",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-VisualMatic_Example/Pods-VisualMatic_Example-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E6BEB8F7D3BABFD212B09BAA /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-VisualMatic_Example/Pods-VisualMatic_Example-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/VisualMatic/VisualMatic.framework",
+				"${BUILT_PRODUCTS_DIR}/FirebaseCore/FirebaseCore.framework",
+				"${BUILT_PRODUCTS_DIR}/FirebaseCoreDiagnostics/FirebaseCoreDiagnostics.framework",
+				"${BUILT_PRODUCTS_DIR}/FirebaseInstallations/FirebaseInstallations.framework",
+				"${BUILT_PRODUCTS_DIR}/FirebaseInstanceID/FirebaseInstanceID.framework",
+				"${BUILT_PRODUCTS_DIR}/FirebaseMessaging/FirebaseMessaging.framework",
+				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
+				"${BUILT_PRODUCTS_DIR}/GoogleDataTransport/GoogleDataTransport.framework",
+				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
+				"${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework",
+				"${BUILT_PRODUCTS_DIR}/PromisesObjC/FBLPromises.framework",
+				"${BUILT_PRODUCTS_DIR}/Protobuf/Protobuf.framework",
+				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/VisualMatic.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseCore.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseCoreDiagnostics.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseInstallations.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseInstanceID.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseMessaging.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleDataTransport.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleUtilities.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBLPromises.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Protobuf.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -335,8 +426,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				607FACD81AFB9204008FA782 /* ViewController.swift in Sources */,
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
+				F1FB3D162642C97000F3B3B4 /* ScannerViewController.swift in Sources */,
+				F1FB3CFF2642C83F00F3B3B4 /* HomeViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -423,7 +515,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -469,7 +561,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
@@ -482,15 +574,16 @@
 			baseConfigurationReference = 755BE2A23C610FDDACBE4767 /* Pods-VisualMatic_Example.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "Apple Development: Dipak Parekh (T2689P3873)";
+				CODE_SIGN_ENTITLEMENTS = VisualMatic_Example.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development: Dhaval Dave (KPBR929YQ4)";
 				CODE_SIGN_STYLE = Manual;
-				DEVELOPMENT_TEAM = X446564LMN;
+				DEVELOPMENT_TEAM = DLP7NL6GNK;
 				INFOPLIST_FILE = VisualMatic/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MODULE_NAME = ExampleApp;
-				PRODUCT_BUNDLE_IDENTIFIER = com.giftz.mobile;
+				PRODUCT_BUNDLE_IDENTIFIER = com.boardactive.visualmatic1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = Giftz_Mobile_Development;
+				PROVISIONING_PROFILE_SPECIFIER = VisualMaticSDK_Development;
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				SWIFT_VERSION = 4.0;
 			};
@@ -501,15 +594,16 @@
 			baseConfigurationReference = 62885A9D02E754EF453CB74C /* Pods-VisualMatic_Example.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "Apple Development: Dipak Parekh (T2689P3873)";
+				CODE_SIGN_ENTITLEMENTS = VisualMatic_Example.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development: Dhaval Dave (KPBR929YQ4)";
 				CODE_SIGN_STYLE = Manual;
-				DEVELOPMENT_TEAM = X446564LMN;
+				DEVELOPMENT_TEAM = DLP7NL6GNK;
 				INFOPLIST_FILE = VisualMatic/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MODULE_NAME = ExampleApp;
-				PRODUCT_BUNDLE_IDENTIFIER = com.giftz.mobile;
+				PRODUCT_BUNDLE_IDENTIFIER = com.boardactive.visualmatic1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = Giftz_Mobile_Development;
+				PROVISIONING_PROFILE_SPECIFIER = VisualMaticSDK_Development;
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				SWIFT_VERSION = 4.0;
 			};
@@ -519,12 +613,11 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 288DE07D32AC06BC4A3C94DC /* Pods-VisualMatic_Tests.debug.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_STYLE = Manual;
-				DEVELOPMENT_TEAM = PN8MASZ3PS;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
-					"$(inherited)",
-				);
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "";
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -545,8 +638,10 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = BF466F2A5C474EE883B4027F /* Pods-VisualMatic_Tests.release.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_STYLE = Manual;
-				DEVELOPMENT_TEAM = PN8MASZ3PS;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
 					"$(inherited)",

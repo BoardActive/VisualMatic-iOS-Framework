@@ -11,7 +11,7 @@
         <!--Camera View Controller-->
         <scene sceneID="kPU-gK-lh6">
             <objects>
-                <viewController storyboardIdentifier="CameraViewController" hidesBottomBarWhenPushed="YES" id="YXl-5B-mBF" customClass="CameraViewController" customModule="VisualMatic" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="CameraViewController" modalTransitionStyle="crossDissolve" modalPresentationStyle="fullScreen" hidesBottomBarWhenPushed="YES" useStoryboardIdentifierAsRestorationIdentifier="YES" id="YXl-5B-mBF" customClass="CameraViewController" customModule="VisualMatic" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="qO2-JB-Jc4"/>
                         <viewControllerLayoutGuide type="bottom" id="7NG-lt-hPa"/>
@@ -162,17 +162,14 @@
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <connections>
-                        <outlet property="btnClose" destination="N3Y-ml-pjs" id="kCW-fa-VdY"/>
-                        <outlet property="btnObject" destination="HqI-Rb-jR7" id="U0U-49-dXP"/>
-                        <outlet property="btnText" destination="nJ7-L4-DOS" id="uT3-2S-BEd"/>
+                        <outlet property="btnClose" destination="N3Y-ml-pjs" id="Agv-Z9-5hU"/>
                         <outlet property="cameraView" destination="Vwd-Qp-BMC" id="yRq-e8-30h"/>
-                        <outlet property="imgv" destination="wfq-DE-MaD" id="f5A-ea-J9X"/>
                         <outlet property="tblObj" destination="v9n-kw-xTV" id="PRI-F5-FRy"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Tub-Fx-HUo" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="815" y="96"/>
+            <point key="canvasLocation" x="207" y="67"/>
         </scene>
         <!--Details View Controller-->
         <scene sceneID="cMy-FR-x43">

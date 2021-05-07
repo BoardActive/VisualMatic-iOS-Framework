@@ -1,7 +1,18 @@
+platform :ios, '11.0'
+
 use_frameworks!
 
 target 'VisualMatic_Example' do
   pod 'VisualMatic', :path => '../'
+  pod 'BAKit-iOS'
+  pod 'Firebase/Messaging'
+  pod 'GoogleMLKit/BarcodeScanning'
+  pod 'GoogleMLKit/FaceDetection'
+  pod 'GoogleMLKit/ImageLabeling'
+  pod 'GoogleMLKit/ImageLabelingCustom'
+  pod 'GoogleMLKit/ObjectDetection'
+  pod 'GoogleMLKit/ObjectDetectionCustom'
+  pod 'GoogleMLKit/TextRecognition'
 
   target 'VisualMatic_Tests' do
     inherit! :search_paths
