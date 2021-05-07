@@ -27,17 +27,30 @@ class HomeViewController: UIViewController {
     }
     */
     
-    @IBAction func btnOpenCamera(sender: UIButton){
+    @IBAction func btnRecogniseCustomObject(sender: UIButton){
+        openCamera(type: .CustomObject)
+    }
+    
+    @IBAction func btnRecogniseText(sender: UIButton){
+        openCamera(type: .TextRecognizer)
+    }
+    
+    @IBAction func btnScanBarcode(sender: UIButton) {
+        openCamera(type: .BarcodeScanner)
+    }
+    
+    private func openCamera(type: ScannerType){
         let bundle = Bundle(for: CameraViewController.self)
         let storyboard = UIStoryboard(name: "Main_Framework", bundle: bundle)
         let controller = storyboard.instantiateViewController(withIdentifier: "CameraViewController") as! CameraViewController
         controller.delegate = self
+        controller.EnableScanner = type
         self.present(controller, animated: true, completion: nil)
     }
 }
 
 extension HomeViewController: CameraViewControllerDelegate {
     func closeButtonAction() {
-        self.navigationController?.popViewController(animated: true)
+        self.dismiss(animated: true, completion: nil)
     }
 }

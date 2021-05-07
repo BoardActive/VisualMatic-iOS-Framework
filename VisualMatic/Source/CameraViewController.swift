@@ -20,8 +20,8 @@ import MLKitCommon
 import MLKitObjectDetectionCustom
 import MLKitVision
 import MLKitTextRecognition
+import MLKitBarcodeScanning
 import BAKit
-import mllde
 
 @objc public protocol CameraViewControllerDelegate {
     @objc optional func closeButtonAction()
@@ -31,11 +31,7 @@ import mllde
 public class CameraViewController: UIViewController {
     
     //MArK:- Outlets
-    @IBOutlet var imgv: UIImageView!
     @IBOutlet var btnClose: UIButton!
-    @IBOutlet var btnText: UIButton!
-    @IBOutlet var btnObject: UIButton!
-    @IBOutlet var tblObj: UITableView!
     @IBOutlet private weak var cameraView: UIView!
 
     //MARK:- Private Variables
@@ -49,6 +45,7 @@ public class CameraViewController: UIViewController {
     
     //MARK:- Public Variables
     public var delegate: CameraViewControllerDelegate?
+    public var EnableScanner: ScannerType = .CustomObject
 
     var objects: [Object] = []
     var arrOffers: [[String: Any]]?
@@ -72,12 +69,11 @@ public class CameraViewController: UIViewController {
   // MARK: - View Life Cycle
     override public func viewDidLoad() {
         super.viewDidLoad()
-        tblObj.isHidden = true
         previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
         setUpPreviewOverlayView()
         setUpAnnotationOverlayView()
-        setUpCaptureSessionOutput()
         setUpCaptureSessionInput()
+        setUpCaptureSessionOutput()
     }
 
     override public func viewDidAppear(_ animated: Bool) {
@@ -97,44 +93,6 @@ public class CameraViewController: UIViewController {
 
     // MARK: - Private methods
     // MARK: On-Device Detections
-    private func recognizeTextOnDevice(in image: VisionImage, width: CGFloat, height: CGFloat) {
-        var recognizedText: Text
-        do {
-            recognizedText = try TextRecognizer.textRecognizer().results(in: image)
-        } catch let error {
-            print("Failed to recognize text with error: \(error.localizedDescription).")
-            return
-        }
-        
-        DispatchQueue.main.sync {
-            self.updatePreviewOverlayView()
-            self.removeDetectionAnnotations()
-
-            // Blocks.
-            for block in recognizedText.blocks {
-                let points = self.convertedPoints(from: block.cornerPoints, width: width, height: height)
-                UIUtilities.addShape(withPoints: points, to: self.annotationOverlayView, color: UIColor.purple)
-
-                // Lines.
-                for line in block.lines {
-                    let points = self.convertedPoints(from: line.cornerPoints, width: width, height: height)
-                    UIUtilities.addShape(withPoints: points, to: self.annotationOverlayView, color: UIColor.orange)
-
-                    // Elements.
-                    for element in line.elements {
-                        let normalizedRect = CGRect(x: element.frame.origin.x / width, y: element.frame.origin.y / height, width: element.frame.size.width / width, height: element.frame.size.height / height)
-                        let convertedRect = self.previewLayer.layerRectConverted(fromMetadataOutputRect: normalizedRect)
-                        UIUtilities.addRectangle(convertedRect, to: self.annotationOverlayView, color: UIColor.green)
-                        let label = UILabel(frame: convertedRect)
-                        label.text = element.text
-                        label.adjustsFontSizeToFitWidth = true
-                        self.annotationOverlayView.addSubview(label)
-                    }
-                }
-            }
-        }
-    }
-
     
     private func detectObjectsOnDevice(in image: VisionImage, width: CGFloat, height: CGFloat, options: CommonObjectDetectorOptions) {
         let detector = ObjectDetector.objectDetector(options: options)
@@ -271,15 +229,11 @@ public class CameraViewController: UIViewController {
                 } else {
                     fr.origin.y =  fr.origin.y-40
                 }
-                if (imgv != nil) {
-                    imgv.image =  image3.croppedInRect(rect: fr)
-                }
                 self.postLocal(brand: "Rolex")
                 break
             }
         }
     }
-
     
     func postLocal(brand: String) {
         activityView = UIActivityIndicatorView(style: .white)
@@ -297,8 +251,6 @@ public class CameraViewController: UIViewController {
                 print(self.arrOffers)
                 DispatchQueue.main.async {
                     if (self.arrOffers != nil) && self.arrOffers!.count > 0 {
-                        self.tblObj.isHidden = false
-                        self.tblObj.reloadData()
                     }
                 }
             }
@@ -399,26 +351,24 @@ public class CameraViewController: UIViewController {
     }
     
     @IBAction func btnClose(_ sender: Any) {
-        tblObj.isHidden = true
-        if (imgv != nil)
-        {
-            imgv.image = UIImage.init()
-        }
-        btnClose.isHidden = true
-        startSession()
+        stopSession()
         delegate?.closeButtonAction?()
-    }
-
-    @IBAction func objectClick(_ sender: Any) {
-    }
-    
-     @IBAction func textClick(_ sender: Any) {
     }
 }
 
 //MARK: Public methods
 extension CameraViewController {
     public func setupSDK(){
+    }
+    
+    public func modifyCloseButton(image butttonImage: UIImage?, title buttonTitle: String?) {
+        if (buttonTitle != nil) {
+            btnClose.setTitle(buttonTitle!, for: .normal)
+        }
+        
+        if (butttonImage != nil) {
+            btnClose.setImage(butttonImage!, for: .normal)
+        }
     }
 }
 
@@ -436,124 +386,162 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
         let orientation = UIUtilities.imageOrientation(
           fromDevicePosition: isUsingFrontCamera ? .front : .back
         )
-
         visionImage.orientation = orientation
+        
+        switch EnableScanner {
+            case .CustomObject:
+                scanCustomObject(image: visionImage, imageBuffer: imageBuffer)
+                
+            case .TextRecognizer:
+                recognizeText(image: visionImage, imageBuffer: imageBuffer)
+                
+            case .BarcodeScanner:
+                scanBarcodes(image: visionImage, imageBuffer: imageBuffer)
+        }
+    }
+    
+    private func scanCustomObject(image: VisionImage, imageBuffer: CVImageBuffer) {
         let imageWidth = CGFloat(CVPixelBufferGetWidth(imageBuffer))
         let imageHeight = CGFloat(CVPixelBufferGetHeight(imageBuffer))
-        var shouldEnableClassification = false
-        var shouldEnableMultipleObjects = false
-        switch currentDetector {
-            case .onDeviceObjectCustomProminentWithClassifier, .onDeviceObjectCustomMultipleWithClassifier:
-              shouldEnableClassification = true
+        
+        guard let localModelFilePath = Bundle.main.path( forResource: Constant.localModelFile.name, ofType: Constant.localModelFile.type)
+        else {
+            print("Failed to find custom local model file.")
+            return
         }
         
-        switch currentDetector {
-            case .onDeviceObjectCustomMultipleWithClassifier:
-              shouldEnableMultipleObjects = true
-            default:
-              break
-        }
+        let localModel = LocalModel(path: localModelFilePath)
+        let options = CustomObjectDetectorOptions(localModel: localModel)
+        options.shouldEnableClassification = true
+        options.shouldEnableMultipleObjects = true
+        options.detectorMode = .stream
+        detectObjectsOnDevice(in: image, width: imageWidth, height: imageHeight, options: options)
+    }
+    
+    private func recognizeText(image: VisionImage, imageBuffer: CVImageBuffer) {
+        let width = CGFloat(CVPixelBufferGetWidth(imageBuffer))
+        let height = CGFloat(CVPixelBufferGetHeight(imageBuffer))
 
-        switch currentDetector {
-            case .onDeviceObjectCustomProminentWithClassifier, .onDeviceObjectCustomMultipleWithClassifier:
-                guard let localModelFilePath = Bundle.main.path( forResource: Constant.localModelFile.name, ofType: Constant.localModelFile.type)
-                else {
-                    print("Failed to find custom local model file.")
-                    return
+        var recognizedText: Text
+        do {
+            recognizedText = try TextRecognizer.textRecognizer().results(in: image)
+        } catch let error {
+            print("Failed to recognize text with error: \(error.localizedDescription).")
+            return
+        }
+        
+        DispatchQueue.main.sync {
+            self.updatePreviewOverlayView()
+            self.removeDetectionAnnotations()
+
+            // Blocks.
+            for block in recognizedText.blocks {
+//                let points = self.convertedPoints(from: block.cornerPoints, width: width, height: height)
+//                UIUtilities.addShape(withPoints: points, to: self.annotationOverlayView, color: UIColor.purple)
+
+                // Lines.
+                for line in block.lines {
+//                    let points = self.convertedPoints(from: line.cornerPoints, width: width, height: height)
+//                    UIUtilities.addShape(withPoints: points, to: self.annotationOverlayView, color: UIColor.orange)
+
+                    // Elements.
+                    for element in line.elements {
+                        let normalizedRect = CGRect(x: element.frame.origin.x / width, y: element.frame.origin.y / height, width: element.frame.size.width / width, height: element.frame.size.height / height)
+                        let convertedRect = self.previewLayer.layerRectConverted(fromMetadataOutputRect: normalizedRect)
+                        UIUtilities.addRectangle(convertedRect, to: self.annotationOverlayView, color: UIColor.green)
+                        let label = UILabel(frame: convertedRect)
+                        label.text = element.text
+                        label.adjustsFontSizeToFitWidth = true
+                        self.annotationOverlayView.addSubview(label)
+                    }
                 }
-                
-                let localModel = LocalModel(path: localModelFilePath)
-                let options = CustomObjectDetectorOptions(localModel: localModel)
-                options.shouldEnableClassification = shouldEnableClassification
-                options.shouldEnableMultipleObjects = shouldEnableMultipleObjects
-                options.detectorMode = .stream
-                detectObjectsOnDevice(in: visionImage, width: imageWidth, height: imageHeight, options: options)
-        }
-    }
-}
-
-extension CameraViewController: UITableViewDelegate, UITableViewDataSource  {
-    
-    public func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
-    
-    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.arrOffers?.count ?? 0
-    }
-    
-    public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 100
-    }
-    
-    public func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return "   \(self.arrOffers?.count ?? 0) matche(s) found"
-    }
-    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    var cell = tableView.dequeueReusableCell(withIdentifier: "CELL")
-    if cell == nil {
-        cell = UITableViewCell(style: UITableViewCell.CellStyle.value1,
-                               reuseIdentifier: "CELL")
-    }
-        
-        let dict = (self.arrOffers?[indexPath.row]["notification"] as! [String: Any])
-        let img = cell?.viewWithTag(1) as! UIImageView
-        let lblTitle = cell?.viewWithTag(2) as! UILabel
-        let lblSubTitle = cell?.viewWithTag(3) as! UILabel
-        
-        let url = URL(string: (dict["imageUrl"] as? String) ?? "")
-        if url != nil {
-        let data = try? Data(contentsOf: url!)
-        img.image = UIImage(data: data!)
-        }
-        img.contentMode = .scaleAspectFit
-        lblTitle.text = self.arrOffers?[indexPath.row]["name"] as? String
-        lblSubTitle.text = (self.arrOffers?[indexPath.row]["notification"] as! [String: Any])["contents"] as? String
-        return cell!
-    }
-    
-    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
-        
-          print(self.arrOffers?[indexPath.row])
-        
-       
-        
-         let str =  (self.arrOffers?[indexPath.row]["notification"] as! [String: Any])["messageData"] as! String
-        
-        let dict = convertStringToDictionary(text: str)
-        
-//        let storyboardBundle = Bundle(for: CameraViewController.self)
-//               let storyboard = UIStoryboard(name: "Main_Framework", bundle: storyboardBundle)
-//               let vc = storyboard.instantiateViewController(withIdentifier: "DetailsViewController") as! DetailsViewController
-//               vc.modalPresentationStyle = .fullScreen
-//        vc.dictDetails = dict
-//        let dict2 = (self.arrOffers?[indexPath.row]["notification"] as! [String: Any])
-//        
-//        vc.strName = self.arrOffers?[indexPath.row]["name"] as? String
-//        vc.strMessage =    dict2["contents"] as? String
-//        
-//        
-//     
-//        
-//        
-//        
-//               vc.strURL = (dict2["imageUrl"] as? String)
-//               self.present(vc, animated: true)
-        
-        
-        print(dict)
-    }
-    
-     func convertStringToDictionary(text: String) -> [String:AnyObject]? {
-        if let data = text.data(using: .utf8) {
-            do {
-                let json = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [String:AnyObject]
-                return json
-            } catch {
-                print("Something went wrong")
             }
         }
-        return nil
     }
+    
+    private func scanBarcodes(image: VisionImage, imageBuffer: CVImageBuffer) {
+        let width = CGFloat(CVPixelBufferGetWidth(imageBuffer))
+        let height = CGFloat(CVPixelBufferGetHeight(imageBuffer))
+
+        let format = BarcodeFormat.all
+        let barcodeOptions = BarcodeScannerOptions(formats: format)
+        let barcodeScanner = BarcodeScanner.barcodeScanner(options: barcodeOptions)
+
+        var barcodes: [Barcode]
+        do {
+            barcodes = try barcodeScanner.results(in: image)
+        } catch let error {
+            print("Failed to scan barcodes with error: \(error.localizedDescription).")
+            return
+        }
+        weak var weakSelf = self
+        DispatchQueue.main.sync {
+            guard let strongSelf = weakSelf else {
+                print("Self is nil!")
+                return
+            }
+            strongSelf.updatePreviewOverlayViewWithLastFrame()
+            strongSelf.removeDetectionAnnotations()
+        }
+        
+        guard !barcodes.isEmpty else {
+          print("Barcode scanner returned no results.")
+          return
+        }
+        
+        DispatchQueue.main.sync {
+            guard let strongSelf = weakSelf else {
+                print("Self is nil!")
+                return
+            }
+            for barcode in barcodes {
+                let normalizedRect = CGRect(x: barcode.frame.origin.x / width, y: barcode.frame.origin.y / height, width: barcode.frame.size.width / width, height: barcode.frame.size.height / height)
+                let convertedRect = strongSelf.previewLayer.layerRectConverted(fromMetadataOutputRect: normalizedRect)
+                UIUtilities.addRectangle(convertedRect, to: strongSelf.annotationOverlayView, color: UIColor.green)
+                let label = UILabel(frame: convertedRect)
+                label.text = barcode.rawValue
+                label.adjustsFontSizeToFitWidth = true
+                strongSelf.rotate(label, orientation: image.orientation)
+                strongSelf.annotationOverlayView.addSubview(label)
+                print("Barcode value: \(barcode.rawValue)")
+            }
+        }
+    }
+    
+    
+    private func rotate(_ view: UIView, orientation: UIImage.Orientation) {
+        var degree: CGFloat = 0.0
+        switch orientation {
+            case .up, .upMirrored:
+              degree = 90.0
+            case .rightMirrored, .left:
+              degree = 180.0
+            case .down, .downMirrored:
+              degree = 270.0
+            case .leftMirrored, .right:
+              degree = 0.0
+             default:
+                print("no orientation")
+        }
+        view.transform = CGAffineTransform.init(rotationAngle: degree * 3.141592654 / 180)
+    }
+    
+    private func updatePreviewOverlayViewWithLastFrame() {
+      guard let lastFrame = lastFrame,
+        let imageBuffer = CMSampleBufferGetImageBuffer(lastFrame)
+      else {
+        return
+      }
+      self.updatePreviewOverlayViewWithImageBuffer(imageBuffer)
+    }
+
+    private func updatePreviewOverlayViewWithImageBuffer(_ imageBuffer: CVImageBuffer?) {
+      guard let imageBuffer = imageBuffer else {
+        return
+      }
+      let orientation: UIImage.Orientation = isUsingFrontCamera ? .leftMirrored : .right
+      let image = UIUtilities.createUIImage(from: imageBuffer, orientation: orientation)
+      previewOverlayView.image = image
+    }
+
 }

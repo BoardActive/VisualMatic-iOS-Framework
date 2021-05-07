@@ -11,11 +11,10 @@ import Firebase
 import UserNotifications
 import Messages
 import BAKit
-import CoreLocation
 import VisualMatic
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
     private let categoryIdentifier = "PreviewNotification"
@@ -42,17 +41,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     }
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        if launchOptions?[UIApplication.LaunchOptionsKey.location] != nil {
-            let locationManager = CLLocationManager()
-            if CLLocationManager.locationServicesEnabled() {
-                locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
-                locationManager.delegate = self
-                locationManager.pausesLocationUpdatesAutomatically = false
-                locationManager.allowsBackgroundLocationUpdates = true
-                locationManager.startMonitoringSignificantLocationChanges()
-            }
-        }
-        
         return true
     }
 
@@ -74,11 +62,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
 
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
-    }
-    
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        guard let _: CLLocationCoordinate2D = manager.location?.coordinate else { return }
-        BoardActive.client.postLocation(location: manager.location!)
     }
 }
 
@@ -103,19 +86,9 @@ BoardActive class's userDefaults.
         let requestNotificationsOperation = BlockOperation.init {
             self.requestNotifications()
         }
-        
-        let monitorLocationOperation = BlockOperation.init {
-            DispatchQueue.main.async {
-                BoardActive.client.monitorLocation()
-            }
-        }
-        
-        monitorLocationOperation.addDependency(requestNotificationsOperation)
         requestNotificationsOperation.addDependency(registerDeviceOperation)
-        
         operationQueue.addOperation(registerDeviceOperation)
         operationQueue.addOperation(requestNotificationsOperation)
-        operationQueue.addOperation(monitorLocationOperation)
     }
 
     public func requestNotifications() {

@@ -13,6 +13,7 @@ enum Constants {
     static let rectangleViewAlpha: CGFloat = 0.3
     static let shapeViewAlpha: CGFloat = 0.3
     static let rectangleViewCornerRadius: CGFloat = 10.0
+    static let originalScale: CGFloat = 1.0
 }
 
 enum APIEndPoints {
@@ -39,6 +40,12 @@ enum Constant {
     static let padding: CGFloat = 10.0
     static let resultsLabelHeight: CGFloat = 200.0
     static let resultsLabelLines = 5
+}
+
+public enum ScannerType {
+    case CustomObject
+    case TextRecognizer
+    case BarcodeScanner
 }
 
 

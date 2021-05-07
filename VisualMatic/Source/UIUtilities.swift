@@ -87,6 +87,14 @@ public class UIUtilities {
                 fatalError()
         }
     }
+    
+    public static func createUIImage(from imageBuffer: CVImageBuffer, orientation: UIImage.Orientation) -> UIImage? {
+        let ciImage = CIImage(cvPixelBuffer: imageBuffer)
+        let context = CIContext(options: nil)
+        guard let cgImage = context.createCGImage(ciImage, from: ciImage.extent) else { return nil }
+        return UIImage(cgImage: cgImage, scale: Constants.originalScale, orientation: orientation)
+    }
+
 
   // MARK: - Private
 
