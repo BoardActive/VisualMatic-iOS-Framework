@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CoreGraphics
 
 extension String {
     enum HeaderKeys {
@@ -72,4 +73,16 @@ extension UIImage {
         
         return result
     }
+    
+    public func scaledImage(with size: CGSize) -> UIImage? {
+        UIGraphicsBeginImageContextWithOptions(size, false, scale)
+        defer { UIGraphicsEndImageContext() }
+        draw(in: CGRect(origin: .zero, size: size))
+        return UIGraphicsGetImageFromCurrentImageContext()?.data.flatMap(UIImage.init)
+    }
+    
+    private var data: Data? {
+        return self.pngData() ?? self.jpegData(compressionQuality: 0.8)
+    }
 }
+

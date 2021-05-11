@@ -42,10 +42,9 @@ enum Constant {
     static let resultsLabelLines = 5
 }
 
-public enum ScannerType {
-    case CustomObject
-    case TextRecognizer
-    case BarcodeScanner
+public enum ScannerType: Int {
+    case CustomObject = 101
+    case TextRecognizer = 102
+    case DigitalInkRecognizer = 103
+    case BarcodeScanner = 104
 }
-
-

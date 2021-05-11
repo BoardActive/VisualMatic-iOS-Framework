@@ -20,6 +20,9 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="vZ4-30-NwV">
+                                <rect key="frame" x="0.0" y="54" width="375" height="563"/>
+                            </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Vwd-Qp-BMC" userLabel="Camera View">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -37,15 +40,100 @@
                                     <action selector="btnClose:" destination="YXl-5B-mBF" eventType="touchUpInside" id="RiN-xQ-AGG"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="79r-pz-baY">
+                                <rect key="frame" x="321" y="10" width="44" height="44"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="44" id="PRu-ZG-F9q"/>
+                                    <constraint firstAttribute="width" constant="44" id="TVE-Qd-smt"/>
+                                </constraints>
+                                <state key="normal" image="video_camera.png"/>
+                                <state key="selected" image="photo_library.png"/>
+                                <connections>
+                                    <action selector="btnCaptureOptionWithSender:" destination="YXl-5B-mBF" eventType="touchUpInside" id="sQZ-tZ-h4u"/>
+                                </connections>
+                            </button>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rWO-tV-Iyq">
+                                <rect key="frame" x="0.0" y="617" width="375" height="50"/>
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" alignment="center" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="c8N-bf-e6o">
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="50"/>
+                                        <subviews>
+                                            <button opaque="NO" tag="101" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VzG-j3-3M8">
+                                                <rect key="frame" x="0.0" y="8" width="90" height="34"/>
+                                                <color key="backgroundColor" red="0.20439660549999999" green="0.77976793050000004" blue="0.34912604089999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
+                                                <state key="normal" title="Object">
+                                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                </state>
+                                                <state key="selected">
+                                                    <color key="titleColor" red="0.20439660549999999" green="0.77976793050000004" blue="0.34912604089999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="btnChangeScannerWithSender:" destination="YXl-5B-mBF" eventType="touchUpInside" id="YJJ-2X-IhY"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" tag="102" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="t9j-MC-eYO">
+                                                <rect key="frame" x="95" y="8" width="90" height="34"/>
+                                                <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
+                                                <state key="normal" title="Text">
+                                                    <color key="titleColor" red="0.035014159980000001" green="0.56694275139999994" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="btnChangeScannerWithSender:" destination="YXl-5B-mBF" eventType="touchUpInside" id="kNc-42-hTJ"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" tag="103" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pLK-1R-s6y">
+                                                <rect key="frame" x="190" y="8" width="90" height="34"/>
+                                                <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
+                                                <state key="normal" title="Ink">
+                                                    <color key="titleColor" red="0.035014159980000001" green="0.56694275139999994" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="btnChangeScannerWithSender:" destination="YXl-5B-mBF" eventType="touchUpInside" id="gXr-lI-oeN"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" tag="104" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fml-Ot-vqc">
+                                                <rect key="frame" x="285" y="8" width="90" height="34"/>
+                                                <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
+                                                <state key="normal" title="Barcode">
+                                                    <color key="titleColor" red="0.035014159980000001" green="0.56694275139999994" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="btnChangeScannerWithSender:" destination="YXl-5B-mBF" eventType="touchUpInside" id="Jwd-T9-WWz"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </stackView>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstItem="c8N-bf-e6o" firstAttribute="top" secondItem="rWO-tV-Iyq" secondAttribute="top" id="T2d-rk-Tby"/>
+                                    <constraint firstItem="c8N-bf-e6o" firstAttribute="leading" secondItem="rWO-tV-Iyq" secondAttribute="leading" id="UWO-ps-FQG"/>
+                                    <constraint firstAttribute="trailing" secondItem="c8N-bf-e6o" secondAttribute="trailing" id="dMP-gJ-RrS"/>
+                                    <constraint firstAttribute="height" constant="50" id="gWM-Bo-yIr"/>
+                                    <constraint firstAttribute="bottom" secondItem="c8N-bf-e6o" secondAttribute="bottom" id="nNn-qq-hl1"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstAttribute="bottom" secondItem="Vwd-Qp-BMC" secondAttribute="bottom" id="1vo-5N-wRZ"/>
                             <constraint firstItem="N3Y-ml-pjs" firstAttribute="leading" secondItem="bWY-Sx-TCF" secondAttribute="leading" constant="10" id="5U3-iL-H7V"/>
+                            <constraint firstAttribute="trailing" secondItem="79r-pz-baY" secondAttribute="trailing" constant="10" id="C4Y-RU-Fx6"/>
+                            <constraint firstAttribute="bottom" secondItem="rWO-tV-Iyq" secondAttribute="bottom" id="JH5-b6-j3A"/>
+                            <constraint firstItem="rWO-tV-Iyq" firstAttribute="top" secondItem="vZ4-30-NwV" secondAttribute="bottom" id="MeO-Vc-J1o"/>
                             <constraint firstItem="Vwd-Qp-BMC" firstAttribute="top" secondItem="qO2-JB-Jc4" secondAttribute="bottom" id="TPR-ef-skx"/>
+                            <constraint firstAttribute="trailing" secondItem="rWO-tV-Iyq" secondAttribute="trailing" id="bhq-EH-Xqc"/>
                             <constraint firstItem="Vwd-Qp-BMC" firstAttribute="leading" secondItem="bWY-Sx-TCF" secondAttribute="leading" id="fbL-hm-kSo"/>
+                            <constraint firstItem="rWO-tV-Iyq" firstAttribute="leading" secondItem="bWY-Sx-TCF" secondAttribute="leading" id="fqY-14-Wq2"/>
+                            <constraint firstItem="vZ4-30-NwV" firstAttribute="top" secondItem="79r-pz-baY" secondAttribute="bottom" id="giF-T8-5Kl"/>
+                            <constraint firstAttribute="trailing" secondItem="vZ4-30-NwV" secondAttribute="trailing" id="hD0-fi-LLc"/>
+                            <constraint firstItem="79r-pz-baY" firstAttribute="top" secondItem="qO2-JB-Jc4" secondAttribute="bottom" constant="10" id="mHa-Yc-Uo0"/>
                             <constraint firstItem="N3Y-ml-pjs" firstAttribute="top" secondItem="qO2-JB-Jc4" secondAttribute="bottom" constant="10" id="onV-8i-v9W"/>
                             <constraint firstAttribute="trailing" secondItem="Vwd-Qp-BMC" secondAttribute="trailing" id="rDq-X3-o2R"/>
+                            <constraint firstItem="vZ4-30-NwV" firstAttribute="leading" secondItem="bWY-Sx-TCF" secondAttribute="leading" id="yz2-EE-NGv"/>
                         </constraints>
                     </view>
                     <extendedEdge key="edgesForExtendedLayout"/>
@@ -54,13 +142,16 @@
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <connections>
+                        <outlet property="btnCameraMode" destination="79r-pz-baY" id="0Ui-vQ-E9M"/>
                         <outlet property="btnClose" destination="N3Y-ml-pjs" id="Agv-Z9-5hU"/>
                         <outlet property="cameraView" destination="Vwd-Qp-BMC" id="yRq-e8-30h"/>
+                        <outlet property="imgObject" destination="vZ4-30-NwV" id="rfR-Ba-hcF"/>
+                        <outlet property="tabBar" destination="rWO-tV-Iyq" id="t51-xL-Tch"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Tub-Fx-HUo" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="207" y="67"/>
+            <point key="canvasLocation" x="106.40000000000001" y="5.8470764617691158"/>
         </scene>
         <!--Details View Controller-->
         <scene sceneID="cMy-FR-x43">
@@ -384,8 +475,10 @@
         <image name="fb" width="30" height="30"/>
         <image name="linkedin" width="30" height="30"/>
         <image name="mail" width="30" height="30"/>
+        <image name="photo_library.png" width="108" height="108"/>
         <image name="sendMSG" width="30" height="30"/>
         <image name="twitter" width="30" height="30"/>
+        <image name="video_camera.png" width="108" height="108"/>
         <image name="website" width="30" height="17"/>
         <image name="youtube" width="30" height="30"/>
         <systemColor name="systemBackgroundColor">

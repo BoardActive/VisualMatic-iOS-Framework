@@ -32,7 +32,10 @@ public class CameraViewController: UIViewController {
     
     //MArK:- Outlets
     @IBOutlet var btnClose: UIButton!
+    @IBOutlet var btnCameraMode: UIButton!
     @IBOutlet private weak var cameraView: UIView!
+    @IBOutlet private weak var tabBar: UIView!
+    @IBOutlet private weak var imgObject: UIImageView!
 
     //MARK:- Private Variables
     private let detectors: [Detector] = [ .onDeviceObjectCustomProminentWithClassifier, .onDeviceObjectCustomMultipleWithClassifier]
@@ -42,10 +45,12 @@ public class CameraViewController: UIViewController {
     private lazy var captureSession = AVCaptureSession()
     private lazy var sessionQueue = DispatchQueue(label: Constant.sessionQueueLabel)
     private var lastFrame: CMSampleBuffer?
-    
+    private var imagePicker = UIImagePickerController()
+
     //MARK:- Public Variables
     public var delegate: CameraViewControllerDelegate?
     public var EnableScanner: ScannerType = .CustomObject
+    public var EnableTabBar: Bool? = true
 
     var objects: [Object] = []
     var arrOffers: [[String: Any]]?
@@ -74,11 +79,13 @@ public class CameraViewController: UIViewController {
         setUpAnnotationOverlayView()
         setUpCaptureSessionInput()
         setUpCaptureSessionOutput()
+        selectScanner()
     }
 
     override public func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         startSession()
+        setupSDK()
     }
 
     override public func viewDidDisappear(_ animated: Bool) {
@@ -350,16 +357,103 @@ public class CameraViewController: UIViewController {
         return normalizedPoint
     }
     
+    
+    private func setupSDK(){
+        if (EnableTabBar!) {
+            tabBar.isHidden = false
+        }
+        let frameworkBundle = Bundle(for: CameraViewController.self)
+        let bundleURL =  frameworkBundle.resourceURL?.appendingPathComponent("VisualMatic.bundle")
+        let resourceBundle = Bundle(url: bundleURL!)
+        let image = UIImage(named: "photo_library", in: resourceBundle, compatibleWith: nil)
+        print(image)
+        
+        
+        
+//        let resourceBundle = Bundle(identifier: "org.cocoapods.VisualMatic")
+//        btnCameraMode.setImage(UIImage(named: "video_camera.png", in: resourceBundle, compatibleWith: nil), for: .normal)
+    }
+    
+    
     @IBAction func btnClose(_ sender: Any) {
         stopSession()
         delegate?.closeButtonAction?()
     }
+    
+    @IBAction func btnChangeScanner(sender: UIButton) {
+        switch sender.tag {
+            case 101:
+                EnableScanner = .CustomObject
+                
+            case 102:
+                EnableScanner = .TextRecognizer
+
+            case 103:
+                EnableScanner = .DigitalInkRecognizer
+
+            case 104:
+                EnableScanner = .BarcodeScanner
+                
+            default:
+                print("Scanner not exist")
+        }
+        selectScanner()
+    }
+    
+    @IBAction func btnCaptureOption(sender: UIButton) {
+        stopSession()
+        cameraView.isHidden = true
+        imgObject.isHidden = false
+        imagePicker.sourceType = .photoLibrary
+        imagePicker.delegate = self
+        present(imagePicker, animated: true, completion: nil)
+    }
+    
+    private func selectScanner() {
+        if let selectedButton = tabBar.viewWithTag(EnableScanner.rawValue) as? UIButton {
+            selectedButton.backgroundColor = UIColor(displayP3Red: 52.0/255.0, green: 199.0/255.0, blue: 89.0/255.0, alpha: 1.0)
+            selectedButton.setTitleColor(UIColor.white, for: .normal)
+            
+            for i in 101...104 {
+                if let btnTemp = tabBar.viewWithTag(i) as? UIButton {
+                    if (EnableScanner.rawValue != i) {
+                        btnTemp.backgroundColor = UIColor.white
+                        btnTemp.setTitleColor(UIColor(displayP3Red: 9.0/255.0, green: 145.0/255.0, blue: 255.0/255.0, alpha: 1.0), for: .normal)
+                    }
+                }
+            }
+        }
+    }
+    
+    private func updateImageView(with image: UIImage) {
+        let orientation = UIApplication.shared.statusBarOrientation
+        var scaledImageWidth: CGFloat = 0.0
+        var scaledImageHeight: CGFloat = 0.0
+        switch orientation {
+            case .portrait, .portraitUpsideDown, .unknown:
+                scaledImageWidth = imgObject.bounds.size.width
+                scaledImageHeight = image.size.height * scaledImageWidth / image.size.width
+            case .landscapeLeft, .landscapeRight:
+                scaledImageWidth = image.size.width * scaledImageHeight / image.size.height
+                scaledImageHeight = imgObject.bounds.size.height
+            @unknown default:
+            fatalError()
+        }
+        weak var weakSelf = self
+        DispatchQueue.global(qos: .userInitiated).async {
+            var scaledImage = image.scaledImage( with: CGSize(width: scaledImageWidth, height: scaledImageHeight))
+            scaledImage = scaledImage ?? image
+            guard let finalImage = scaledImage else { return }
+            DispatchQueue.main.async {
+                weakSelf?.imgObject.image = finalImage
+            }
+        }
+    }
+
 }
 
 //MARK: Public methods
 extension CameraViewController {
-    public func setupSDK(){
-    }
     
     public func modifyCloseButton(image butttonImage: UIImage?, title buttonTitle: String?) {
         if (buttonTitle != nil) {
@@ -397,6 +491,9 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
                 
             case .BarcodeScanner:
                 scanBarcodes(image: visionImage, imageBuffer: imageBuffer)
+                
+        case .DigitalInkRecognizer:
+            print("in development")
         }
     }
     
@@ -543,5 +640,19 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
       let image = UIUtilities.createUIImage(from: imageBuffer, orientation: orientation)
       previewOverlayView.image = image
     }
-
 }
+
+// MARK: - UIImagePickerControllerDelegate
+extension CameraViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+
+    public func imagePickerController( _ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
+        removeDetectionAnnotations()
+        if let pickedImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
+            updateImageView(with: pickedImage)
+        }
+        dismiss(animated: true)
+    }
+}
+
+
+
