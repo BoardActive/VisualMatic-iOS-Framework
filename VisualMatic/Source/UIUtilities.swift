@@ -36,11 +36,23 @@ public class UIUtilities {
 
     public static func addRectangle(_ rectangle: CGRect, to view: UIView, color: UIColor) {
         let rectangleView = UIView(frame: rectangle)
+        rectangleView.isUserInteractionEnabled = true
         rectangleView.layer.cornerRadius = Constants.rectangleViewCornerRadius
         rectangleView.alpha = Constants.rectangleViewAlpha
         rectangleView.backgroundColor = color
         view.addSubview(rectangleView)
     }
+    
+    public static func addRectangle(_ rectangle: CGRect, borderColor: UIColor) -> UIView {
+        let rectangleView = UIView(frame: rectangle)
+        rectangleView.isUserInteractionEnabled = true
+        rectangleView.layer.cornerRadius = Constants.rectangleViewCornerRadius
+        rectangleView.layer.borderWidth = 2
+        rectangleView.layer.borderColor = borderColor.cgColor
+        rectangleView.backgroundColor = .clear
+        return rectangleView
+    }
+
 
     public static func addShape(withPoints points: [NSValue]?, to view: UIView, color: UIColor) {
         guard let points = points else { return }

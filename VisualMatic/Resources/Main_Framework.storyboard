@@ -20,8 +20,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="vZ4-30-NwV">
-                                <rect key="frame" x="0.0" y="54" width="375" height="563"/>
+                            <imageView hidden="YES" clipsSubviews="YES" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="vZ4-30-NwV">
+                                <rect key="frame" x="0.0" y="50" width="375" height="567"/>
                             </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Vwd-Qp-BMC" userLabel="Camera View">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
@@ -41,13 +41,13 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="79r-pz-baY">
-                                <rect key="frame" x="321" y="10" width="44" height="44"/>
+                                <rect key="frame" x="325" y="10" width="40" height="40"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="44" id="PRu-ZG-F9q"/>
-                                    <constraint firstAttribute="width" constant="44" id="TVE-Qd-smt"/>
+                                    <constraint firstAttribute="height" constant="40" id="PRu-ZG-F9q"/>
+                                    <constraint firstAttribute="width" constant="40" id="TVE-Qd-smt"/>
                                 </constraints>
-                                <state key="normal" image="video_camera.png"/>
+                                <state key="normal" image="photo_library.png"/>
                                 <state key="selected" image="photo_library.png"/>
                                 <connections>
                                     <action selector="btnCaptureOptionWithSender:" destination="YXl-5B-mBF" eventType="touchUpInside" id="sQZ-tZ-h4u"/>
@@ -60,7 +60,7 @@
                                         <rect key="frame" x="0.0" y="0.0" width="375" height="50"/>
                                         <subviews>
                                             <button opaque="NO" tag="101" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VzG-j3-3M8">
-                                                <rect key="frame" x="0.0" y="8" width="90" height="34"/>
+                                                <rect key="frame" x="0.0" y="8" width="121.5" height="34"/>
                                                 <color key="backgroundColor" red="0.20439660549999999" green="0.77976793050000004" blue="0.34912604089999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                                                 <state key="normal" title="Object">
@@ -74,7 +74,7 @@
                                                 </connections>
                                             </button>
                                             <button opaque="NO" tag="102" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="t9j-MC-eYO">
-                                                <rect key="frame" x="95" y="8" width="90" height="34"/>
+                                                <rect key="frame" x="126.5" y="8" width="122" height="34"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                                                 <state key="normal" title="Text">
                                                     <color key="titleColor" red="0.035014159980000001" green="0.56694275139999994" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -83,18 +83,8 @@
                                                     <action selector="btnChangeScannerWithSender:" destination="YXl-5B-mBF" eventType="touchUpInside" id="kNc-42-hTJ"/>
                                                 </connections>
                                             </button>
-                                            <button opaque="NO" tag="103" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pLK-1R-s6y">
-                                                <rect key="frame" x="190" y="8" width="90" height="34"/>
-                                                <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
-                                                <state key="normal" title="Ink">
-                                                    <color key="titleColor" red="0.035014159980000001" green="0.56694275139999994" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                </state>
-                                                <connections>
-                                                    <action selector="btnChangeScannerWithSender:" destination="YXl-5B-mBF" eventType="touchUpInside" id="gXr-lI-oeN"/>
-                                                </connections>
-                                            </button>
                                             <button opaque="NO" tag="104" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fml-Ot-vqc">
-                                                <rect key="frame" x="285" y="8" width="90" height="34"/>
+                                                <rect key="frame" x="253.5" y="8" width="121.5" height="34"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                                                 <state key="normal" title="Barcode">
                                                     <color key="titleColor" red="0.035014159980000001" green="0.56694275139999994" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -478,7 +468,6 @@
         <image name="photo_library.png" width="108" height="108"/>
         <image name="sendMSG" width="30" height="30"/>
         <image name="twitter" width="30" height="30"/>
-        <image name="video_camera.png" width="108" height="108"/>
         <image name="website" width="30" height="17"/>
         <image name="youtube" width="30" height="30"/>
         <systemColor name="systemBackgroundColor">

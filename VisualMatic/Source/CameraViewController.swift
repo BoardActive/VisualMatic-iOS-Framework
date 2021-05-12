@@ -121,7 +121,18 @@ public class CameraViewController: UIViewController {
 
         DispatchQueue.main.sync {
             for object in objects {
+                let tapGesture = ObjectTapEvent(target: self, action: #selector(self.cameraObject(sender:)))
+                tapGesture.objectId = object.labels.first?.index
+                tapGesture.objectName = object.labels.first?.text ?? ""
+
                 let normalizedRect = CGRect(x: object.frame.origin.x / width, y: object.frame.origin.y / height, width: object.frame.size.width / width, height: object.frame.size.height / height)
+                let standardizedRect = self.previewLayer.layerRectConverted( fromMetadataOutputRect: normalizedRect).standardized
+                let box = UIUtilities.addRectangle(standardizedRect, borderColor: .white)
+                self.annotationOverlayView.addGestureRecognizer(tapGesture)
+                self.annotationOverlayView.addSubview(box)
+                
+                
+       /*         let normalizedRect = CGRect(x: object.frame.origin.x / width, y: object.frame.origin.y / height, width: object.frame.size.width / width, height: object.frame.size.height / height)
                 let standardizedRect = self.previewLayer.layerRectConverted( fromMetadataOutputRect: normalizedRect).standardized
                 UIUtilities.addRectangle(standardizedRect, to: self.annotationOverlayView, color: UIColor.green)
                 let label = UILabel(frame: standardizedRect)
@@ -136,7 +147,7 @@ public class CameraViewController: UIViewController {
                 label.text = description
                 label.numberOfLines = 0
                 label.adjustsFontSizeToFitWidth = true
-                self.annotationOverlayView.addSubview(label)
+                self.annotationOverlayView.addSubview(label)*/
             }
         }
     }
@@ -220,7 +231,7 @@ public class CameraViewController: UIViewController {
     }
     
     
-    override public func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+  /*  override public func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         let touch = touches.first!
         let location = touch.location(in: self.annotationOverlayView)
         
@@ -240,7 +251,7 @@ public class CameraViewController: UIViewController {
                 break
             }
         }
-    }
+    }*/
     
     func postLocal(brand: String) {
         activityView = UIActivityIndicatorView(style: .white)
@@ -308,37 +319,35 @@ public class CameraViewController: UIViewController {
     present(alertController, animated: true)
   }
 
-  private func removeDetectionAnnotations() {
-    for annotationView in annotationOverlayView.subviews {
-      annotationView.removeFromSuperview()
+    private func removeDetectionAnnotations() {
+        for annotationView in annotationOverlayView.subviews {
+            annotationView.removeFromSuperview()
+        }
     }
-  }
 
-  private func updatePreviewOverlayView() {
-    guard let lastFrame = lastFrame,
-          let imageBuffer = CMSampleBufferGetImageBuffer(lastFrame)
-    else {
-        return
-    }
-    
-    let ciImage = CIImage(cvPixelBuffer: imageBuffer)
-    let context = CIContext(options: nil)
-    guard let cgImage = context.createCGImage(ciImage, from: ciImage.extent) else {
-        return
-    }
-    let rotatedImage = UIImage(cgImage: cgImage, scale: Constant.originalScale, orientation: .right)
-    if isUsingFrontCamera {
-        guard let rotatedCGImage = rotatedImage.cgImage else {
+    private func updatePreviewOverlayView() {
+        guard let lastFrame = lastFrame, let imageBuffer = CMSampleBufferGetImageBuffer(lastFrame) else {
             return
         }
-        let mirroredImage = UIImage(
-        cgImage: rotatedCGImage, scale: Constant.originalScale, orientation: .leftMirrored)
-        previewOverlayView.image = mirroredImage
-        
-    } else {
-        previewOverlayView.image = rotatedImage
+
+        let ciImage = CIImage(cvPixelBuffer: imageBuffer)
+        let context = CIContext(options: nil)
+        guard let cgImage = context.createCGImage(ciImage, from: ciImage.extent) else {
+            return
+        }
+        let rotatedImage = UIImage(cgImage: cgImage, scale: Constant.originalScale, orientation: .right)
+        if isUsingFrontCamera {
+            guard let rotatedCGImage = rotatedImage.cgImage else {
+                return
+            }
+            let mirroredImage = UIImage(
+            cgImage: rotatedCGImage, scale: Constant.originalScale, orientation: .leftMirrored)
+            previewOverlayView.image = mirroredImage
+            
+        } else {
+            previewOverlayView.image = rotatedImage
+        }
     }
-  }
 
   private func convertedPoints( from points: [NSValue]?, width: CGFloat, height: CGFloat) -> [NSValue]? {
     return points?.map {
@@ -362,16 +371,6 @@ public class CameraViewController: UIViewController {
         if (EnableTabBar!) {
             tabBar.isHidden = false
         }
-        let frameworkBundle = Bundle(for: CameraViewController.self)
-        let bundleURL =  frameworkBundle.resourceURL?.appendingPathComponent("VisualMatic.bundle")
-        let resourceBundle = Bundle(url: bundleURL!)
-        let image = UIImage(named: "photo_library", in: resourceBundle, compatibleWith: nil)
-        print(image)
-        
-        
-        
-//        let resourceBundle = Bundle(identifier: "org.cocoapods.VisualMatic")
-//        btnCameraMode.setImage(UIImage(named: "video_camera.png", in: resourceBundle, compatibleWith: nil), for: .normal)
     }
     
     
@@ -400,13 +399,40 @@ public class CameraViewController: UIViewController {
         selectScanner()
     }
     
+    
+    //This action change image capture mode.
     @IBAction func btnCaptureOption(sender: UIButton) {
         stopSession()
-        cameraView.isHidden = true
-        imgObject.isHidden = false
-        imagePicker.sourceType = .photoLibrary
-        imagePicker.delegate = self
-        present(imagePicker, animated: true, completion: nil)
+        let actionSheet = UIAlertController(title: "Mode", message: nil, preferredStyle: .actionSheet)
+        let cameraAction = UIAlertAction(title: "Camera", style: .default) { (action) in
+            DispatchQueue.main.async {
+                self.removeBoxFromImageView()
+                self.startSession()
+                self.cameraView.isHidden = false
+                self.imgObject.isHidden = true
+                self.imgObject.image = nil
+            }
+        }
+        
+        let galleryAction = UIAlertAction(title: "Gallery", style: .default) { (action) in
+            self.imagePicker.sourceType = .photoLibrary
+            self.imagePicker.delegate = self
+            DispatchQueue.main.async {
+                self.removeBoxFromImageView()
+                self.stopSession()
+                self.cameraView.isHidden = true
+                self.imgObject.isHidden = false
+                self.present(self.imagePicker, animated: true, completion: nil)
+            }
+        }
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .destructive, handler: nil)
+        
+        actionSheet.addAction(cameraAction)
+        actionSheet.addAction(galleryAction)
+        actionSheet.addAction(cancelAction)
+        
+        present(actionSheet, animated: true, completion: nil)
     }
     
     private func selectScanner() {
@@ -446,8 +472,66 @@ public class CameraViewController: UIViewController {
             guard let finalImage = scaledImage else { return }
             DispatchQueue.main.async {
                 weakSelf?.imgObject.image = finalImage
+                self.processGalleryImages(image: finalImage)
             }
         }
+    }
+    
+    private func processGalleryImages(image: UIImage) {
+        let visionImage = VisionImage(image: image)
+        visionImage.orientation = image.imageOrientation
+        
+        switch EnableScanner {
+            case .CustomObject:
+                scanCustomObject(image: visionImage)
+                
+            case .TextRecognizer:
+                recognizeText(image: visionImage)
+                
+            case .BarcodeScanner:
+                scanBarcodes(image: visionImage)
+                
+        case .DigitalInkRecognizer:
+            print("in development")
+        }
+    }
+    
+    private func transformMatrix() -> CGAffineTransform {
+        guard let image = imgObject.image else { return CGAffineTransform() }
+        let imageViewWidth = imgObject.frame.size.width
+        let imageViewHeight = imgObject.frame.size.height
+        let imageWidth = image.size.width
+        let imageHeight = image.size.height
+
+        let imageViewAspectRatio = imageViewWidth / imageViewHeight
+        let imageAspectRatio = imageWidth / imageHeight
+        let scale = (imageViewAspectRatio > imageAspectRatio) ? imageViewHeight / imageHeight : imageViewWidth / imageWidth
+
+        // Image view's `contentMode` is `scaleAspectFit`, which scales the image to fit the size of the
+        // image view by maintaining the aspect ratio. Multiple by `scale` to get image's original size.
+        let scaledImageWidth = imageWidth * scale
+        let scaledImageHeight = imageHeight * scale
+        let xValue = (imageViewWidth - scaledImageWidth) / CGFloat(2.0)
+        let yValue = (imageViewHeight - scaledImageHeight) / CGFloat(2.0)
+
+        var transform = CGAffineTransform.identity.translatedBy(x: xValue, y: yValue)
+        transform = transform.scaledBy(x: scale, y: scale)
+        return transform
+    }
+
+    
+    private func removeBoxFromImageView() {
+        for view in imgObject.subviews {
+            view.removeFromSuperview()
+        }
+    }
+    
+    
+    private func showAlert(message: String) {
+        let alert = UIAlertController(title: "VisualMatic", message: message, preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+        alert.addAction(okAction)
+        present(alert, animated: true, completion: nil)
     }
 
 }
@@ -515,6 +599,84 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
         detectObjectsOnDevice(in: image, width: imageWidth, height: imageHeight, options: options)
     }
     
+    private func scanCustomObject(image: VisionImage) {
+        guard let localModelFilePath = Bundle.main.path( forResource: Constant.localModelFile.name, ofType: Constant.localModelFile.type)
+        else {
+            print("Failed to find custom local model file.")
+            return
+        }
+
+        let localModel = LocalModel(path: localModelFilePath)
+        let options = CustomObjectDetectorOptions(localModel: localModel)
+        options.shouldEnableClassification = true
+        options.shouldEnableMultipleObjects = true
+        options.detectorMode = .singleImage
+                
+        let detector = ObjectDetector.objectDetector(options: options)
+        detector.process(image) { (objects, error) in
+            
+            if (error != nil) {
+                print(error!.localizedDescription)
+                return
+            }
+            
+            DispatchQueue.main.async {
+                self.removeDetectionAnnotations()
+            }
+
+            guard let detectedObjects = objects, !detectedObjects.isEmpty else {
+                print("On-Device object detector returned no results.")
+                return
+            }
+            
+            for object in objects! {
+                let tapGesture = ObjectTapEvent(target: self, action: #selector(self.galleryObject(sender:)))
+                tapGesture.objectId = object.labels.first?.index ?? 0
+                tapGesture.objectName = object.labels.first?.text ?? ""
+
+                let transform = self.transformMatrix()
+                let standardizedRect = object.frame.applying(transform)
+                let box = UIUtilities.addRectangle(standardizedRect, borderColor: .white)
+                box.addGestureRecognizer(tapGesture)
+                self.imgObject.addSubview(box)
+            }
+        }
+    }
+    
+    @objc func galleryObject(sender: ObjectTapEvent) {
+        if (EnableScanner == .CustomObject) {
+            if let message = sender.objectName, sender.objectId != 0 {
+                showAlert(message: message)
+            } else {
+                showAlert(message: "The details of the object is not available in the model.")
+            }
+        } else {
+            if let message = sender.objectName {
+                showAlert(message: message)
+            }
+        }
+        print(sender.objectName)
+    }
+    
+    
+    @objc func cameraObject(sender: ObjectTapEvent) {
+        stopSession()
+        
+        if (EnableScanner == .CustomObject) {
+            if let message = sender.objectName, sender.objectId != 0 {
+                showAlert(message: message)
+            } else {
+                showAlert(message: "The details of the object is not available in the model.")
+            }
+        } else {
+            if let message = sender.objectName {
+                showAlert(message: message)
+            }
+        }
+        print(sender.objectName)
+
+    }
+    
     private func recognizeText(image: VisionImage, imageBuffer: CVImageBuffer) {
         let width = CGFloat(CVPixelBufferGetWidth(imageBuffer))
         let height = CGFloat(CVPixelBufferGetHeight(imageBuffer))
@@ -543,13 +705,57 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
 
                     // Elements.
                     for element in line.elements {
+                        let tapGesture = ObjectTapEvent(target: self, action: #selector(self.cameraObject(sender:)))
+                        tapGesture.objectName = element.text
+
                         let normalizedRect = CGRect(x: element.frame.origin.x / width, y: element.frame.origin.y / height, width: element.frame.size.width / width, height: element.frame.size.height / height)
-                        let convertedRect = self.previewLayer.layerRectConverted(fromMetadataOutputRect: normalizedRect)
-                        UIUtilities.addRectangle(convertedRect, to: self.annotationOverlayView, color: UIColor.green)
-                        let label = UILabel(frame: convertedRect)
-                        label.text = element.text
-                        label.adjustsFontSizeToFitWidth = true
-                        self.annotationOverlayView.addSubview(label)
+                        let standardizedRect = self.previewLayer.layerRectConverted( fromMetadataOutputRect: normalizedRect).standardized
+                        let box = UIUtilities.addRectangle(standardizedRect, borderColor: .white)
+                        self.annotationOverlayView.addGestureRecognizer(tapGesture)
+                        self.annotationOverlayView.addSubview(box)
+
+                        
+//                        let normalizedRect = CGRect(x: element.frame.origin.x / width, y: element.frame.origin.y / height, width: element.frame.size.width / width, height: element.frame.size.height / height)
+//                        let convertedRect = self.previewLayer.layerRectConverted(fromMetadataOutputRect: normalizedRect)
+//                        UIUtilities.addRectangle(convertedRect, to: self.annotationOverlayView, color: UIColor.green)
+//                        let label = UILabel(frame: convertedRect)
+//                        label.text = element.text
+//                        label.adjustsFontSizeToFitWidth = true
+//                        self.annotationOverlayView.addSubview(label)
+                    }
+                }
+            }
+        }
+    }
+    
+    
+    private func recognizeText(image: VisionImage) {
+        let textRecognizer = TextRecognizer.textRecognizer()
+        textRecognizer.process(image) { result, error in
+            guard error == nil, let result = result else {
+                // Error handling
+                return
+            }
+            
+            DispatchQueue.main.async {
+//                self.removeBoxFromImageView()
+                self.removeDetectionAnnotations()
+            }
+            
+            for block in result.blocks {
+                // Lines.
+                for line in block.lines {
+                    // Elements.
+                    for element in line.elements {
+                        let tapGesture = ObjectTapEvent(target: self, action: #selector(self.galleryObject(sender:)))
+                        tapGesture.objectId = 0
+                        tapGesture.objectName = element.text
+
+                        let transform = self.transformMatrix()
+                        let standardizedRect = element.frame.applying(transform)
+                        let box = UIUtilities.addRectangle(standardizedRect, borderColor: .white)
+                        box.addGestureRecognizer(tapGesture)
+                        self.imgObject.addSubview(box)
                     }
                 }
             }
@@ -592,7 +798,19 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
                 return
             }
             for barcode in barcodes {
+                let tapGesture = ObjectTapEvent(target: self, action: #selector(self.cameraObject(sender:)))
+                tapGesture.objectName = barcode.rawValue
+
                 let normalizedRect = CGRect(x: barcode.frame.origin.x / width, y: barcode.frame.origin.y / height, width: barcode.frame.size.width / width, height: barcode.frame.size.height / height)
+                let standardizedRect = self.previewLayer.layerRectConverted( fromMetadataOutputRect: normalizedRect).standardized
+                let box = UIUtilities.addRectangle(standardizedRect, borderColor: .white)
+                self.annotationOverlayView.addGestureRecognizer(tapGesture)
+                self.annotationOverlayView.addSubview(box)
+
+
+                
+                
+            /*    let normalizedRect = CGRect(x: barcode.frame.origin.x / width, y: barcode.frame.origin.y / height, width: barcode.frame.size.width / width, height: barcode.frame.size.height / height)
                 let convertedRect = strongSelf.previewLayer.layerRectConverted(fromMetadataOutputRect: normalizedRect)
                 UIUtilities.addRectangle(convertedRect, to: strongSelf.annotationOverlayView, color: UIColor.green)
                 let label = UILabel(frame: convertedRect)
@@ -600,7 +818,44 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
                 label.adjustsFontSizeToFitWidth = true
                 strongSelf.rotate(label, orientation: image.orientation)
                 strongSelf.annotationOverlayView.addSubview(label)
-                print("Barcode value: \(barcode.rawValue)")
+                print("Barcode value: \(barcode.rawValue)")*/
+            }
+        }
+    }
+    
+    
+    private func scanBarcodes(image: VisionImage) {
+       
+        let format = BarcodeFormat.all
+        let barcodeOptions = BarcodeScannerOptions(formats: format)
+        let barcodeScanner = BarcodeScanner.barcodeScanner(options: barcodeOptions)
+
+        barcodeScanner.process(image) { features, error in
+          guard error == nil, let features = features, !features.isEmpty else {
+            print(error.debugDescription)
+            return
+          }
+          // Recognized barcodes
+            DispatchQueue.main.async {
+                self.removeDetectionAnnotations()
+            }
+            
+            for barcode in features {
+                let tapGesture = ObjectTapEvent(target: self, action: #selector(self.galleryObject(sender:)))
+                tapGesture.objectName = barcode.rawValue
+                
+                let transform = self.transformMatrix()
+                let standardizedRect = barcode.frame.applying(transform)
+                let box = UIUtilities.addRectangle(standardizedRect, borderColor: .systemGreen)
+                box.addGestureRecognizer(tapGesture)
+                self.imgObject.addSubview(box)
+
+//                let normalizedRect = CGRect(x: barcode.frame.origin.x / width, y: barcode.frame.origin.y / height, width: barcode.frame.size.width / width, height: barcode.frame.size.height / height)
+//                let standardizedRect = self.previewLayer.layerRectConverted( fromMetadataOutputRect: normalizedRect).standardized
+//                let box = UIUtilities.addRectangle(standardizedRect, borderColor: .white)
+//                self.annotationOverlayView.addGestureRecognizer(tapGesture)
+//                self.annotationOverlayView.addSubview(box)
+
             }
         }
     }
