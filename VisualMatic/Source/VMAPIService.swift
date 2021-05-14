@@ -7,13 +7,23 @@
 
 import Foundation
 
-public class VMAPIService {
+@objc public protocol VMAPIServiceDelegate {
+    @objc optional func downloadProgress(downloadPercent: Int64)
+    @objc optional func downloadCompleted()
+    @objc optional func downloadError(error: Error)
+}
+
+public class VMAPIService: NSObject {
     
     public static let sharedVMAPIService = VMAPIService()
+    public var delegate: VMAPIServiceDelegate?
+    public var modelPath: String?
+    
     private var APP_ID = ""
     private var APP_KEY = ""
+    private var fileName = ""
     
-    private init(){
+    private override init(){
         
     }
 
@@ -61,7 +71,8 @@ public class VMAPIService {
         let session = URLSession.shared
         session.dataTask(with: request) { (data, response, error) in
             if (error != nil) {
-                completionHandler(nil, nil)
+                let error = NSError(domain: "", code: 401, userInfo: ["errorMessage": error?.localizedDescription as Any])
+                completionHandler(nil, error)
             }
             
             if let data = data {
@@ -75,4 +86,100 @@ public class VMAPIService {
         }.resume()
     }
     
+    public func loadMLModel() {
+        let urlString = APIEndPoints.BaseURL + APIEndPoints.Models
+        guard let escapedString = urlString.addingPercentEncoding(withAllowedCharacters:NSCharacterSet.urlQueryAllowed) else {
+            let error = NSError(domain: "", code: 401, userInfo: ["errorMessage": "API url is invalid."])
+            delegate?.downloadError?(error: error)
+            return
+        }
+        if let serviceUrl = URL(string: escapedString) {
+            var request = URLRequest(url: serviceUrl)
+            request.httpMethod = "GET"
+            request.allHTTPHeaderFields = getHeaders()
+            URLSession.shared.dataTask(with: request) { [self] (data, response, error) in
+                if (error != nil) {
+                    let error = NSError(domain: "", code: 1000, userInfo: ["errorMessage": error?.localizedDescription as Any])
+                    self.delegate?.downloadError?(error: error)
+                }
+                
+                if let responseData = data {
+                    do {
+                        let jsonData = try JSONSerialization.jsonObject(with: responseData, options: []) as! [String: Any]
+                        if let downloadURL = jsonData["url"] as? String {
+                            self.startDownload(url: downloadURL)
+                        } else {
+                            let error = NSError(domain: "", code: 1000, userInfo: ["errorMessage": "Download url is not exist."])
+                            self.delegate?.downloadError?(error: error)
+                        }
+                    } catch {
+                        let error = NSError(domain: "", code: 1000, userInfo: ["errorMessage": "Response data is not in proper format."])
+                        self.delegate?.downloadError?(error: error)
+                    }
+                }
+            }.resume()
+        }
+    }
+    
+    private func startDownload(url: String) {
+        if let downloadURL = URL(string: url) {
+            fileName = downloadURL.lastPathComponent
+            if (!isModelExist()) {
+                let configuration = URLSessionConfiguration.default
+                let operationQueue = OperationQueue()
+                let session = URLSession(configuration: configuration, delegate: self, delegateQueue: operationQueue)
+                let downloadTask = session.downloadTask(with: URL(string: url)!)
+                downloadTask.resume()
+            }
+        } else {
+            let error = NSError(domain: "", code: 1000, userInfo: ["errorMessage": "Download url is not a valid url."])
+            delegate?.downloadError?(error: error)
+        }
+    }
+    
+    private func isModelExist() -> Bool {
+        let appPaths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+        let documentDirPath = appPaths[0]
+        let filePath = documentDirPath.appendingPathComponent(fileName)
+        print(filePath)
+
+        if (!FileManager.default.fileExists(atPath: filePath.path)) {
+            modelPath = nil
+            return false
+        } else {
+            modelPath = filePath.path
+            delegate?.downloadCompleted?()
+            return true
+        }
+
+    }
+}
+
+extension VMAPIService: URLSessionDownloadDelegate {
+    public func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
+        print(fileName)
+        
+        let appPaths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+        let documentDirPath = appPaths[0]
+        let filePath = documentDirPath.appendingPathComponent(fileName)
+        print(filePath)
+        
+        do {
+            try FileManager.default.copyItem(at: location, to: filePath)
+            modelPath = filePath.path
+            self.delegate?.downloadCompleted?()
+            
+        } catch {
+            let error = NSError(domain: "", code: 1000, userInfo: ["errorMessage": "Downloaded file cannot be copied into document directory."])
+            delegate?.downloadError?(error: error)
+            print("file could not be copied")
+        }
+    }
+    
+    public func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didWriteData bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
+        let percentDownloaded = (totalBytesWritten * 100) / totalBytesExpectedToWrite
+        DispatchQueue.main.async {
+            self.delegate?.downloadProgress!(downloadPercent: percentDownloaded)
+        }
+    }
 }

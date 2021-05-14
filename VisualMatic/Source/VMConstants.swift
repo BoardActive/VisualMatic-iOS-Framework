@@ -17,8 +17,10 @@ enum Constants {
 }
 
 enum APIEndPoints {
-    static let BaseURL = "https://dev-api.boardactive.com/mobile/v1"
+//    static let BaseURL = "https://dev-api.boardactive.com/mobile/v1"
+    static let BaseURL = "https://boardactiveapi.dev.radixweb.net/mobile/v1"
     static let Scans = "/scans"
+    static let Models = "/models"
 }
 
 public enum Detector: String {

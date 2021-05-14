@@ -38,9 +38,6 @@ public class CameraViewController: UIViewController {
     @IBOutlet private weak var imgObject: UIImageView!
 
     //MARK:- Private Variables
-    private let detectors: [Detector] = [ .onDeviceObjectCustomProminentWithClassifier, .onDeviceObjectCustomMultipleWithClassifier]
-    private var currentDetector: Detector = .onDeviceObjectCustomProminentWithClassifier
-    private var isUsingFrontCamera = false
     private var previewLayer: AVCaptureVideoPreviewLayer!
     private lazy var captureSession = AVCaptureSession()
     private lazy var sessionQueue = DispatchQueue(label: Constant.sessionQueueLabel)
@@ -110,16 +107,19 @@ public class CameraViewController: UIViewController {
             return
         }
 
-        DispatchQueue.main.sync {
-            self.updatePreviewOverlayView()
-            self.removeDetectionAnnotations()
-        }
         guard !objects.isEmpty else {
+            DispatchQueue.main.sync {
+                self.updatePreviewOverlayView()
+                self.removeDetectionAnnotations()
+            }
             print("On-Device object detector returned no results.")
             return
         }
 
         DispatchQueue.main.sync {
+            self.updatePreviewOverlayView()
+            self.removeDetectionAnnotations()
+
             for object in objects {
                 let tapGesture = ObjectTapEvent(target: self, action: #selector(self.cameraObject(sender:)))
                 tapGesture.objectId = object.labels.first?.index
@@ -128,8 +128,9 @@ public class CameraViewController: UIViewController {
                 let normalizedRect = CGRect(x: object.frame.origin.x / width, y: object.frame.origin.y / height, width: object.frame.size.width / width, height: object.frame.size.height / height)
                 let standardizedRect = self.previewLayer.layerRectConverted( fromMetadataOutputRect: normalizedRect).standardized
                 let box = UIUtilities.addRectangle(standardizedRect, borderColor: .white)
-                self.annotationOverlayView.addGestureRecognizer(tapGesture)
-                self.annotationOverlayView.addSubview(box)
+                box.addGestureRecognizer(tapGesture)
+                self.annotationOverlayView.insertSubview(box, at: self.annotationOverlayView.subviews.count)
+
                 
                 
        /*         let normalizedRect = CGRect(x: object.frame.origin.x / width, y: object.frame.origin.y / height, width: object.frame.size.width / width, height: object.frame.size.height / height)
@@ -174,8 +175,8 @@ public class CameraViewController: UIViewController {
 
     private func setUpCaptureSessionInput() {
         sessionQueue.async {
-            let cameraPosition: AVCaptureDevice.Position = self.isUsingFrontCamera ? .front : .back
-            guard let device = self.captureDevice(forPosition: cameraPosition) else {
+            let cameraPosition: AVCaptureDevice.Position = .back
+            guard let device = self.captureDevice(forPosition: .back) else {
                 print("Failed to get capture device for camera position: \(cameraPosition)")
                 return
             }
@@ -298,27 +299,6 @@ public class CameraViewController: UIViewController {
     return nil
   }
 
-  private func presentDetectorsAlertController() {
-    let alertController = UIAlertController(
-      title: Constant.alertControllerTitle,
-      message: Constant.alertControllerMessage,
-      preferredStyle: .alert
-    )
-    detectors.forEach { detectorType in
-      let action = UIAlertAction(title: detectorType.rawValue, style: .default) {
-        [unowned self] (action) in
-        guard let value = action.title else { return }
-        guard let detector = Detector(rawValue: value) else { return }
-        self.currentDetector = detector
-        self.removeDetectionAnnotations()
-      }
-      if detectorType.rawValue == currentDetector.rawValue { action.isEnabled = false }
-      alertController.addAction(action)
-    }
-    alertController.addAction(UIAlertAction(title: Constant.cancelActionTitleText, style: .cancel))
-    present(alertController, animated: true)
-  }
-
     private func removeDetectionAnnotations() {
         for annotationView in annotationOverlayView.subviews {
             annotationView.removeFromSuperview()
@@ -336,17 +316,7 @@ public class CameraViewController: UIViewController {
             return
         }
         let rotatedImage = UIImage(cgImage: cgImage, scale: Constant.originalScale, orientation: .right)
-        if isUsingFrontCamera {
-            guard let rotatedCGImage = rotatedImage.cgImage else {
-                return
-            }
-            let mirroredImage = UIImage(
-            cgImage: rotatedCGImage, scale: Constant.originalScale, orientation: .leftMirrored)
-            previewOverlayView.image = mirroredImage
-            
-        } else {
-            previewOverlayView.image = rotatedImage
-        }
+        previewOverlayView.image = rotatedImage
     }
 
   private func convertedPoints( from points: [NSValue]?, width: CGFloat, height: CGFloat) -> [NSValue]? {
@@ -397,6 +367,11 @@ public class CameraViewController: UIViewController {
                 print("Scanner not exist")
         }
         selectScanner()
+        
+        if (!imgObject.isHidden && imgObject.image != nil) {
+            self.removeBoxFromImageView()
+            processGalleryImages(image: imgObject.image!)
+        }
     }
     
     
@@ -561,9 +536,7 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
         }
         lastFrame = sampleBuffer
         let visionImage = VisionImage(buffer: sampleBuffer)
-        let orientation = UIUtilities.imageOrientation(
-          fromDevicePosition: isUsingFrontCamera ? .front : .back
-        )
+        let orientation = UIUtilities.imageOrientation(fromDevicePosition: .back)
         visionImage.orientation = orientation
         
         switch EnableScanner {
@@ -585,13 +558,13 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
         let imageWidth = CGFloat(CVPixelBufferGetWidth(imageBuffer))
         let imageHeight = CGFloat(CVPixelBufferGetHeight(imageBuffer))
         
-        guard let localModelFilePath = Bundle.main.path( forResource: Constant.localModelFile.name, ofType: Constant.localModelFile.type)
-        else {
-            print("Failed to find custom local model file.")
-            return
-        }
+//        guard let localModelFilePath = Bundle.main.path( forResource: Constant.localModelFile.name, ofType: Constant.localModelFile.type)
+//        else {
+//            print("Failed to find custom local model file.")
+//            return
+//        }
         
-        let localModel = LocalModel(path: localModelFilePath)
+        let localModel = LocalModel(path: VMAPIService.sharedVMAPIService.modelPath!)
         let options = CustomObjectDetectorOptions(localModel: localModel)
         options.shouldEnableClassification = true
         options.shouldEnableMultipleObjects = true
@@ -711,7 +684,7 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
                         let normalizedRect = CGRect(x: element.frame.origin.x / width, y: element.frame.origin.y / height, width: element.frame.size.width / width, height: element.frame.size.height / height)
                         let standardizedRect = self.previewLayer.layerRectConverted( fromMetadataOutputRect: normalizedRect).standardized
                         let box = UIUtilities.addRectangle(standardizedRect, borderColor: .white)
-                        self.annotationOverlayView.addGestureRecognizer(tapGesture)
+                        box.addGestureRecognizer(tapGesture)
                         self.annotationOverlayView.addSubview(box)
 
                         
@@ -793,10 +766,6 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
         }
         
         DispatchQueue.main.sync {
-            guard let strongSelf = weakSelf else {
-                print("Self is nil!")
-                return
-            }
             for barcode in barcodes {
                 let tapGesture = ObjectTapEvent(target: self, action: #selector(self.cameraObject(sender:)))
                 tapGesture.objectName = barcode.rawValue
@@ -804,7 +773,7 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
                 let normalizedRect = CGRect(x: barcode.frame.origin.x / width, y: barcode.frame.origin.y / height, width: barcode.frame.size.width / width, height: barcode.frame.size.height / height)
                 let standardizedRect = self.previewLayer.layerRectConverted( fromMetadataOutputRect: normalizedRect).standardized
                 let box = UIUtilities.addRectangle(standardizedRect, borderColor: .white)
-                self.annotationOverlayView.addGestureRecognizer(tapGesture)
+                box.addGestureRecognizer(tapGesture)
                 self.annotationOverlayView.addSubview(box)
 
 
@@ -891,7 +860,7 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
       guard let imageBuffer = imageBuffer else {
         return
       }
-      let orientation: UIImage.Orientation = isUsingFrontCamera ? .leftMirrored : .right
+      let orientation: UIImage.Orientation = .right
       let image = UIUtilities.createUIImage(from: imageBuffer, orientation: orientation)
       previewOverlayView.image = image
     }

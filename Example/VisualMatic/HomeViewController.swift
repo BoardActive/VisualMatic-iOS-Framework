@@ -11,9 +11,20 @@ import VisualMatic
 
 class HomeViewController: UIViewController {
 
+    @IBOutlet weak var btnScanOutlet: UIButton!
+    @IBOutlet weak var lblProgressPercent: UILabel!
+    @IBOutlet weak var progressView: UIProgressView!
+
+    let progress = Progress(totalUnitCount: 100)
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        progressView.progress = 0.0
+        progress.completedUnitCount = 0
+
+        manageControlVisibility(isModelLoaded: false)
+        VMAPIService.sharedVMAPIService.delegate = self
+        VMAPIService.sharedVMAPIService.loadMLModel()
     }
     
 
@@ -46,10 +57,41 @@ class HomeViewController: UIViewController {
     
     private func openCamera(type: ScannerType){
     }
+    
+    private func manageControlVisibility(isModelLoaded: Bool) {
+        btnScanOutlet.isEnabled = isModelLoaded
+        progressView.isHidden = isModelLoaded
+        lblProgressPercent.isHidden = isModelLoaded
+    }
 }
 
+//MARK:- CameraViewControllerDelegate methods
 extension HomeViewController: CameraViewControllerDelegate {
     func closeButtonAction() {
         self.dismiss(animated: true, completion: nil)
+    }
+}
+
+//MARK:- VMAPIServiceDelegate methods
+extension HomeViewController: VMAPIServiceDelegate {
+    func downloadError(error: Error) {
+        print(error)
+    }
+    
+    func downloadProgress(downloadPercent: Int64) {        
+        if (downloadPercent == 100) {
+            lblProgressPercent.text = "Model Downloaded."
+            manageControlVisibility(isModelLoaded: true)
+        } else {
+            progress.completedUnitCount = downloadPercent
+            self.progressView.setProgress(Float(progress.fractionCompleted), animated: true)
+            lblProgressPercent.text = "Downloading \(downloadPercent) %"
+        }
+    }
+    
+    func downloadCompleted() {
+        DispatchQueue.main.async {
+            self.manageControlVisibility(isModelLoaded: true)
+        }
     }
 }

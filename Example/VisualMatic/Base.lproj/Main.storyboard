@@ -28,7 +28,7 @@
                                         <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                         <state key="normal" title="Scan"/>
                                         <connections>
-                                            <action selector="btnScanWithSender:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="BxB-hX-tyO"/>
+                                            <action selector="btnScanWithSender:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="2xy-yq-aoJ"/>
                                         </connections>
                                     </button>
                                     <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gDX-Bs-151">
@@ -49,15 +49,41 @@
                                     </button>
                                 </subviews>
                             </stackView>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="b76-eF-d6D">
+                                <rect key="frame" x="0.0" y="637.5" width="375" height="29.5"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Downloading" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OEo-Pd-DKE">
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="20.5"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="sCk-iR-4Ql">
+                                        <rect key="frame" x="0.0" y="25.5" width="375" height="4"/>
+                                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="tintColor" red="0.36862745099999999" green="0.74117647060000003" blue="0.42745098040000001" alpha="1" colorSpace="calibratedRGB"/>
+                                        <color key="progressTintColor" red="0.36862745099999999" green="0.74117647060000003" blue="0.42745098040000001" alpha="1" colorSpace="calibratedRGB"/>
+                                    </progressView>
+                                </subviews>
+                            </stackView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="WIV-Ob-jx8" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" constant="10" id="33a-Xo-wRe"/>
+                            <constraint firstItem="b76-eF-d6D" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" id="4om-X9-1lo"/>
                             <constraint firstItem="WIV-Ob-jx8" firstAttribute="centerY" secondItem="kh9-bI-dsS" secondAttribute="centerY" id="Lcl-hu-QBC"/>
+                            <constraint firstAttribute="trailing" secondItem="b76-eF-d6D" secondAttribute="trailing" id="NlG-9j-Voa"/>
                             <constraint firstAttribute="trailing" secondItem="WIV-Ob-jx8" secondAttribute="trailing" constant="10" id="T6Q-3I-O4M"/>
+                            <constraint firstItem="2fi-mo-0CV" firstAttribute="top" secondItem="b76-eF-d6D" secondAttribute="bottom" id="hIq-AV-F90"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="VisualMatic" id="MV9-QP-Sj3"/>
+                    <connections>
+                        <outlet property="btnScanOutlet" destination="hiX-5d-eeR" id="BUs-52-TWL"/>
+                        <outlet property="lblProgressPercent" destination="OEo-Pd-DKE" id="5XT-J3-NEo"/>
+                        <outlet property="progressView" destination="sCk-iR-4Ql" id="rZH-dU-WaE"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
             </objects>
