@@ -24,7 +24,7 @@
                                 <rect key="frame" x="0.0" y="50" width="375" height="567"/>
                             </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Vwd-Qp-BMC" userLabel="Camera View">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="617"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="N3Y-ml-pjs">
@@ -109,9 +109,9 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstAttribute="bottom" secondItem="Vwd-Qp-BMC" secondAttribute="bottom" id="1vo-5N-wRZ"/>
                             <constraint firstItem="N3Y-ml-pjs" firstAttribute="leading" secondItem="bWY-Sx-TCF" secondAttribute="leading" constant="10" id="5U3-iL-H7V"/>
                             <constraint firstAttribute="trailing" secondItem="79r-pz-baY" secondAttribute="trailing" constant="10" id="C4Y-RU-Fx6"/>
+                            <constraint firstItem="rWO-tV-Iyq" firstAttribute="top" secondItem="Vwd-Qp-BMC" secondAttribute="bottom" id="DFx-qe-ebk"/>
                             <constraint firstAttribute="bottom" secondItem="rWO-tV-Iyq" secondAttribute="bottom" id="JH5-b6-j3A"/>
                             <constraint firstItem="rWO-tV-Iyq" firstAttribute="top" secondItem="vZ4-30-NwV" secondAttribute="bottom" id="MeO-Vc-J1o"/>
                             <constraint firstItem="Vwd-Qp-BMC" firstAttribute="top" secondItem="qO2-JB-Jc4" secondAttribute="bottom" id="TPR-ef-skx"/>

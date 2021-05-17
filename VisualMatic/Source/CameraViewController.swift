@@ -118,16 +118,32 @@ public class CameraViewController: UIViewController {
 
         DispatchQueue.main.sync {
             self.updatePreviewOverlayView()
-            self.removeDetectionAnnotations()
+//            self.removeDetectionAnnotations()
 
             for object in objects {
+                guard let idTemp = object.labels.first?.index else {
+                    return
+                }
+                
+                if (idTemp == 0) {
+                    return
+                }
+                
+                if let vwTemp = annotationOverlayView.viewWithTag(idTemp),
+                   annotationOverlayView.subviews.contains(vwTemp){
+                    return
+                }
+                
+                print("Object id :\(object.labels.first?.index)")
+                
                 let tapGesture = ObjectTapEvent(target: self, action: #selector(self.cameraObject(sender:)))
                 tapGesture.objectId = object.labels.first?.index
                 tapGesture.objectName = object.labels.first?.text ?? ""
-
+                
                 let normalizedRect = CGRect(x: object.frame.origin.x / width, y: object.frame.origin.y / height, width: object.frame.size.width / width, height: object.frame.size.height / height)
                 let standardizedRect = self.previewLayer.layerRectConverted( fromMetadataOutputRect: normalizedRect).standardized
                 let box = UIUtilities.addRectangle(standardizedRect, borderColor: .white)
+                box.tag = tapGesture.objectId!
                 box.addGestureRecognizer(tapGesture)
                 self.annotationOverlayView.insertSubview(box, at: self.annotationOverlayView.subviews.count)
 
@@ -350,6 +366,8 @@ public class CameraViewController: UIViewController {
     }
     
     @IBAction func btnChangeScanner(sender: UIButton) {
+        self.removeDetectionAnnotations()
+        
         switch sender.tag {
             case 101:
                 EnableScanner = .CustomObject
@@ -557,15 +575,16 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
     private func scanCustomObject(image: VisionImage, imageBuffer: CVImageBuffer) {
         let imageWidth = CGFloat(CVPixelBufferGetWidth(imageBuffer))
         let imageHeight = CGFloat(CVPixelBufferGetHeight(imageBuffer))
+        var localModel: LocalModel?
         
-//        guard let localModelFilePath = Bundle.main.path( forResource: Constant.localModelFile.name, ofType: Constant.localModelFile.type)
-//        else {
-//            print("Failed to find custom local model file.")
-//            return
-//        }
-        
-        let localModel = LocalModel(path: VMAPIService.sharedVMAPIService.modelPath!)
-        let options = CustomObjectDetectorOptions(localModel: localModel)
+        if let serverModelPath = VMAPIService.sharedVMAPIService.modelPath {
+            localModel = LocalModel(path: serverModelPath)
+            
+        } else if let testModelPath = Bundle.main.path( forResource: Constant.localModelFile.name, ofType: Constant.localModelFile.type) {
+            localModel = LocalModel(path: testModelPath)
+        }
+
+        let options = CustomObjectDetectorOptions(localModel: localModel!)
         options.shouldEnableClassification = true
         options.shouldEnableMultipleObjects = true
         options.detectorMode = .stream
@@ -654,6 +673,8 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
         let width = CGFloat(CVPixelBufferGetWidth(imageBuffer))
         let height = CGFloat(CVPixelBufferGetHeight(imageBuffer))
 
+        
+        print("image height: \(height)")
         var recognizedText: Text
         do {
             recognizedText = try TextRecognizer.textRecognizer().results(in: image)
@@ -661,6 +682,7 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
             print("Failed to recognize text with error: \(error.localizedDescription).")
             return
         }
+
         
         DispatchQueue.main.sync {
             self.updatePreviewOverlayView()
@@ -668,26 +690,20 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
 
             // Blocks.
             for block in recognizedText.blocks {
-//                let points = self.convertedPoints(from: block.cornerPoints, width: width, height: height)
-//                UIUtilities.addShape(withPoints: points, to: self.annotationOverlayView, color: UIColor.purple)
-
                 // Lines.
                 for line in block.lines {
-//                    let points = self.convertedPoints(from: line.cornerPoints, width: width, height: height)
-//                    UIUtilities.addShape(withPoints: points, to: self.annotationOverlayView, color: UIColor.orange)
-
                     // Elements.
                     for element in line.elements {
                         let tapGesture = ObjectTapEvent(target: self, action: #selector(self.cameraObject(sender:)))
                         tapGesture.objectName = element.text
 
                         let normalizedRect = CGRect(x: element.frame.origin.x / width, y: element.frame.origin.y / height, width: element.frame.size.width / width, height: element.frame.size.height / height)
-                        let standardizedRect = self.previewLayer.layerRectConverted( fromMetadataOutputRect: normalizedRect).standardized
+                        let standardizedRect = self.previewLayer.layerRectConverted( fromMetadataOutputRect: normalizedRect)
                         let box = UIUtilities.addRectangle(standardizedRect, borderColor: .white)
                         box.addGestureRecognizer(tapGesture)
                         self.annotationOverlayView.addSubview(box)
 
-                        
+
 //                        let normalizedRect = CGRect(x: element.frame.origin.x / width, y: element.frame.origin.y / height, width: element.frame.size.width / width, height: element.frame.size.height / height)
 //                        let convertedRect = self.previewLayer.layerRectConverted(fromMetadataOutputRect: normalizedRect)
 //                        UIUtilities.addRectangle(convertedRect, to: self.annotationOverlayView, color: UIColor.green)
@@ -773,10 +789,8 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
                 let normalizedRect = CGRect(x: barcode.frame.origin.x / width, y: barcode.frame.origin.y / height, width: barcode.frame.size.width / width, height: barcode.frame.size.height / height)
                 let standardizedRect = self.previewLayer.layerRectConverted( fromMetadataOutputRect: normalizedRect).standardized
                 let box = UIUtilities.addRectangle(standardizedRect, borderColor: .white)
-                box.addGestureRecognizer(tapGesture)
+                self.annotationOverlayView.addGestureRecognizer(tapGesture)
                 self.annotationOverlayView.addSubview(box)
-
-
                 
                 
             /*    let normalizedRect = CGRect(x: barcode.frame.origin.x / width, y: barcode.frame.origin.y / height, width: barcode.frame.size.width / width, height: barcode.frame.size.height / height)

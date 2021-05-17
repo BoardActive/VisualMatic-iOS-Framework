@@ -35,8 +35,8 @@ public class UIUtilities {
     }
 
     public static func addRectangle(_ rectangle: CGRect, to view: UIView, color: UIColor) {
+        guard rectangle.isValid() else { return }
         let rectangleView = UIView(frame: rectangle)
-        rectangleView.isUserInteractionEnabled = true
         rectangleView.layer.cornerRadius = Constants.rectangleViewCornerRadius
         rectangleView.alpha = Constants.rectangleViewAlpha
         rectangleView.backgroundColor = color
