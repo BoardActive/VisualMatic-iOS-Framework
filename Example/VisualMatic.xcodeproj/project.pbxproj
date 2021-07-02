@@ -586,6 +586,7 @@
 				DEVELOPMENT_TEAM = DLP7NL6GNK;
 				INFOPLIST_FILE = VisualMatic/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 0.1.0;
 				MODULE_NAME = ExampleApp;
 				PRODUCT_BUNDLE_IDENTIFIER = com.boardactive.visualmatic1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -606,6 +607,7 @@
 				DEVELOPMENT_TEAM = DLP7NL6GNK;
 				INFOPLIST_FILE = VisualMatic/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 0.1.0;
 				MODULE_NAME = ExampleApp;
 				PRODUCT_BUNDLE_IDENTIFIER = com.boardactive.visualmatic1;
 				PRODUCT_NAME = "$(TARGET_NAME)";

@@ -8,9 +8,9 @@
 
 Pod::Spec.new do |s|
   s.name             = 'VisualMatic'
-  s.version          = '1.0'
-  s.summary          = 'A VisualMatic framework is for detecting objects from the image, identify text from the image and scan qr code.'
-  s.description      = 'Description of visual matic framework'
+  s.version          = '0.1.0'
+  s.summary          = 'A VisualMatic framework is an object detection framework.'
+  s.description      = 'A VisualMatic framework is for detecting objects from the image, identify text from the image and scan qr code.'
   s.homepage         = 'https://boardactive.com'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'innovify' => 'krishna.solanki@innovify.in' }
