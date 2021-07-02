@@ -9,7 +9,7 @@
 Pod::Spec.new do |s|
   s.name             = 'VisualMatic'
   s.version          = '1.0'
-  s.summary          = 'A short description of VisualMatic.'
+  s.summary          = 'A VisualMatic framework is for detecting objects from the image, identify text from the image and scan qr code.'
   s.description      = 'Description of visual matic framework'
   s.homepage         = 'https://boardactive.com'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }

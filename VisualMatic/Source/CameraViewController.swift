@@ -27,10 +27,12 @@ import BAKit
     @objc optional func closeButtonAction()
 }
 
-//@objc(CameraViewController)
+/**
+ View controller provide options like object scanner, text reader and barcode/qrcode reader.
+*/
 public class CameraViewController: UIViewController {
     
-    //MArK:- Outlets
+    //MARK:- Properties of controls used in this controller.
     @IBOutlet var btnClose: UIButton!
     @IBOutlet var btnCameraMode: UIButton!
     @IBOutlet private weak var cameraView: UIView!
@@ -352,19 +354,26 @@ public class CameraViewController: UIViewController {
         return normalizedPoint
     }
     
-    
     private func setupSDK(){
         if (EnableTabBar!) {
             tabBar.isHidden = false
         }
     }
     
-    
+    /**
+     The action of the close button which stops the session and calls the delegate method.
+     - sender: UIButton on which users tapped.
+     */
     @IBAction func btnClose(_ sender: Any) {
         stopSession()
         delegate?.closeButtonAction?()
     }
     
+    /**
+     The action for changing the type of scanner.
+     - sender: UIButton on which users tapped.
+     */
+
     @IBAction func btnChangeScanner(sender: UIButton) {
         self.removeDetectionAnnotations()
         
@@ -375,8 +384,8 @@ public class CameraViewController: UIViewController {
             case 102:
                 EnableScanner = .TextRecognizer
 
-            case 103:
-                EnableScanner = .DigitalInkRecognizer
+//            case 103:
+//                EnableScanner = .DigitalInkRecognizer
 
             case 104:
                 EnableScanner = .BarcodeScanner
@@ -393,7 +402,11 @@ public class CameraViewController: UIViewController {
     }
     
     
-    //This action change image capture mode.
+    /**
+     This action change image capture mode from Gallery to Camera and vice versa.
+     - sender: UIButton on which users tapped.
+     */
+
     @IBAction func btnCaptureOption(sender: UIButton) {
         stopSession()
         let actionSheet = UIAlertController(title: "Mode", message: nil, preferredStyle: .actionSheet)
@@ -484,8 +497,8 @@ public class CameraViewController: UIViewController {
             case .BarcodeScanner:
                 scanBarcodes(image: visionImage)
                 
-        case .DigitalInkRecognizer:
-            print("in development")
+//        case .DigitalInkRecognizer:
+//            print("in development")
         }
     }
     
@@ -526,6 +539,16 @@ public class CameraViewController: UIViewController {
         alert.addAction(okAction)
         present(alert, animated: true, completion: nil)
     }
+    
+    private func notifyServer(objectName: String) {
+        VMAPIService.sharedVMAPIService.sendScanResult(body: ["brandName":"\(objectName)"]) { (response, error) in
+            if (error != nil) {
+                print(error)
+            } else {
+                print(response)
+            }
+        }
+    }
 
 }
 
@@ -546,7 +569,7 @@ extension CameraViewController {
 // MARK: AVCaptureVideoDataOutputSampleBufferDelegate
 
 extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
-
+    
     public func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         guard let imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else {
             print("Failed to get image buffer from sample buffer.")
@@ -567,8 +590,8 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
             case .BarcodeScanner:
                 scanBarcodes(image: visionImage, imageBuffer: imageBuffer)
                 
-        case .DigitalInkRecognizer:
-            print("in development")
+//        case .DigitalInkRecognizer:
+//            print("in development")
         }
     }
     
@@ -638,12 +661,14 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
     @objc func galleryObject(sender: ObjectTapEvent) {
         if (EnableScanner == .CustomObject) {
             if let message = sender.objectName, sender.objectId != 0 {
+                notifyServer(objectName: message)
                 showAlert(message: message)
             } else {
                 showAlert(message: "The details of the object is not available in the model.")
             }
         } else {
             if let message = sender.objectName {
+                notifyServer(objectName: message)
                 showAlert(message: message)
             }
         }
@@ -656,12 +681,14 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
         
         if (EnableScanner == .CustomObject) {
             if let message = sender.objectName, sender.objectId != 0 {
+                notifyServer(objectName: message)
                 showAlert(message: message)
             } else {
                 showAlert(message: "The details of the object is not available in the model.")
             }
         } else {
             if let message = sender.objectName {
+                notifyServer(objectName: message)
                 showAlert(message: message)
             }
         }

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import BAKit
 
 @objc public protocol VMAPIServiceDelegate {
     @objc optional func downloadProgress(downloadPercent: Int64)
@@ -13,12 +14,13 @@ import Foundation
     @objc optional func downloadError(error: Error)
 }
 
+
 public class VMAPIService: NSObject {
     
     public static let sharedVMAPIService = VMAPIService()
     public var delegate: VMAPIServiceDelegate?
     public var modelPath: String?
-    
+
     private var APP_ID = ""
     private var APP_KEY = ""
     private var fileName = ""
@@ -33,7 +35,8 @@ public class VMAPIService: NSObject {
     }
     
     func getHeaders() -> [String: String]? {
-    
+        let tokenString = BoardActive.client.userDefaults?.object(forKey: String.HeaderValues.FCMToken) as? String ?? "abc"
+
         let headers: [String: String] = [
             String.HeaderKeys.AcceptEncodingHeader: String.HeaderValues.GzipDeflate,
             String.HeaderKeys.AcceptHeader: String.HeaderValues.WildCards,
@@ -45,7 +48,7 @@ public class VMAPIService: NSObject {
             String.HeaderKeys.ContentTypeHeader: String.HeaderValues.ApplicationJSON,
             String.HeaderKeys.DeviceOSHeader: String.HeaderValues.iOS,
             String.HeaderKeys.DeviceOSVersionHeader: String.HeaderValues.DeviceOSVersion,
-            String.HeaderKeys.DeviceTokenHeader: "abc",
+            String.HeaderKeys.DeviceTokenHeader: tokenString,
             String.HeaderKeys.DeviceTypeHeader: String.HeaderValues.DeviceType,
             String.HeaderKeys.IsTestApp: "0",
             String.HeaderKeys.UUIDHeader: UIDevice.current.identifierForVendor!.uuidString,
@@ -86,6 +89,9 @@ public class VMAPIService: NSObject {
         }.resume()
     }
     
+    /**
+     Function get the url of ML models from the server and from the URL it downloads the model.
+     */
     public func loadMLModel() {
         let urlString = APIEndPoints.BaseURL + APIEndPoints.Models
         guard let escapedString = urlString.addingPercentEncoding(withAllowedCharacters:NSCharacterSet.urlQueryAllowed) else {

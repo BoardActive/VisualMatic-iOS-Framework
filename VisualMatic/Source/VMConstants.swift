@@ -7,7 +7,9 @@
 
 import Foundation
 
-
+/**
+ Constant values used through the sdk.
+ */
 enum Constants {
     static let circleViewAlpha: CGFloat = 0.7
     static let rectangleViewAlpha: CGFloat = 0.3
@@ -16,16 +18,14 @@ enum Constants {
     static let originalScale: CGFloat = 1.0
 }
 
+/**
+ Development and production base urls with their associated end points.
+ */
 enum APIEndPoints {
 //    static let BaseURL = "https://dev-api.boardactive.com/mobile/v1"
     static let BaseURL = "https://boardactiveapi.dev.radixweb.net/mobile/v1"
     static let Scans = "/scans"
     static let Models = "/models"
-}
-
-public enum Detector: String {
-    case onDeviceObjectCustomProminentWithClassifier = "ODT, custom, single, labeling"
-    case onDeviceObjectCustomMultipleWithClassifier = "ODT, custom, multiple, labeling"
 }
 
 enum Constant {
@@ -44,9 +44,11 @@ enum Constant {
     static let resultsLabelLines = 5
 }
 
+/**
+Types of scanner supported by the SDK
+*/
 public enum ScannerType: Int {
     case CustomObject = 101
     case TextRecognizer = 102
-    case DigitalInkRecognizer = 103
     case BarcodeScanner = 104
 }
