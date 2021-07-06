@@ -36,6 +36,17 @@ public class VMAPIService: NSObject {
     
     func getHeaders() -> [String: String]? {
         let tokenString = BoardActive.client.userDefaults?.object(forKey: String.HeaderValues.FCMToken) as? String ?? "abc"
+        
+        let hostKey: String
+        if BoardActive.client.isDevEnv {
+            hostKey = String.HeaderValues.DevHostKey
+        } else {
+            hostKey = String.HeaderValues.ProdHostKey
+        }
+        
+        APP_KEY = BoardActive.client.userDefaults?.string(forKey: String.ConfigKeys.AppKey) ?? ""
+        APP_ID = BoardActive.client.userDefaults?.string(forKey: String.ConfigKeys.AppId) ?? ""
+
 
         let headers: [String: String] = [
             String.HeaderKeys.AcceptEncodingHeader: String.HeaderValues.GzipDeflate,
@@ -50,8 +61,9 @@ public class VMAPIService: NSObject {
             String.HeaderKeys.DeviceOSVersionHeader: String.HeaderValues.DeviceOSVersion,
             String.HeaderKeys.DeviceTokenHeader: tokenString,
             String.HeaderKeys.DeviceTypeHeader: String.HeaderValues.DeviceType,
-            String.HeaderKeys.IsTestApp: "0",
-            String.HeaderKeys.UUIDHeader: UIDevice.current.identifierForVendor!.uuidString,
+            String.HeaderKeys.IsTestApp: "1",
+            String.HeaderKeys.HostHeader: hostKey,
+            String.HeaderKeys.UUIDHeader: UIDevice.current.identifierForVendor!.uuidString
         ]
         return headers
     }

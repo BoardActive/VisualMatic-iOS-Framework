@@ -22,9 +22,12 @@ class HomeViewController: UIViewController {
         progressView.progress = 0.0
         progress.completedUnitCount = 0
 
-        manageControlVisibility(isModelLoaded: true)
+        manageControlVisibility(isModelLoaded: false)
         VMAPIService.sharedVMAPIService.delegate = self
-//        VMAPIService.sharedVMAPIService.loadMLModel()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        VMAPIService.sharedVMAPIService.loadMLModel()
     }
     
 

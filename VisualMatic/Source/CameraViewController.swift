@@ -615,14 +615,24 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
     }
     
     private func scanCustomObject(image: VisionImage) {
-        guard let localModelFilePath = Bundle.main.path( forResource: Constant.localModelFile.name, ofType: Constant.localModelFile.type)
-        else {
-            print("Failed to find custom local model file.")
-            return
+//        guard let localModelFilePath = Bundle.main.path( forResource: Constant.localModelFile.name, ofType: Constant.localModelFile.type)
+//        else {
+//            print("Failed to find custom local model file.")
+//            return
+//        }
+//
+        var localModel: LocalModel?
+        
+        if let serverModelPath = VMAPIService.sharedVMAPIService.modelPath {
+            localModel = LocalModel(path: serverModelPath)
+            
+        } else if let testModelPath = Bundle.main.path( forResource: Constant.localModelFile.name, ofType: Constant.localModelFile.type) {
+            localModel = LocalModel(path: testModelPath)
         }
 
-        let localModel = LocalModel(path: localModelFilePath)
-        let options = CustomObjectDetectorOptions(localModel: localModel)
+
+//        let localModel = LocalModel(path: localModelFilePath)
+        let options = CustomObjectDetectorOptions(localModel: localModel!)
         options.shouldEnableClassification = true
         options.shouldEnableMultipleObjects = true
         options.detectorMode = .singleImage
