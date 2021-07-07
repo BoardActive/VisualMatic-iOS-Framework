@@ -12,10 +12,11 @@ import VisualMatic
 class HomeViewController: UIViewController {
 
     @IBOutlet weak var btnScanOutlet: UIButton!
+    @IBOutlet weak var btnUpdateModelOutlet: UIButton!
     @IBOutlet weak var lblProgressPercent: UILabel!
     @IBOutlet weak var progressView: UIProgressView!
 
-    let progress = Progress(totalUnitCount: 100)
+    var progress = Progress(totalUnitCount: 100)
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -50,6 +51,15 @@ class HomeViewController: UIViewController {
         self.present(controller, animated: true, completion: nil)
     }
     
+    @IBAction func btnUpdateModel(sender: UIButton) {
+        manageControlVisibility(isModelLoaded: false)
+        lblProgressPercent.text = "Downloading 0%"
+        progressView.progress = 0.0
+        progress.completedUnitCount = 0
+
+        VMAPIService.sharedVMAPIService.updateModel()
+    }
+    
 //    @IBAction func btnRecogniseText(sender: UIButton){
 //        openCamera(type: .TextRecognizer)
 //    }
@@ -63,6 +73,7 @@ class HomeViewController: UIViewController {
     
     private func manageControlVisibility(isModelLoaded: Bool) {
         btnScanOutlet.isEnabled = isModelLoaded
+        btnUpdateModelOutlet.isEnabled = isModelLoaded
         progressView.isHidden = isModelLoaded
         lblProgressPercent.isHidden = isModelLoaded
     }

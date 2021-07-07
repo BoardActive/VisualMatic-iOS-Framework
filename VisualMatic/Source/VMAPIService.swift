@@ -24,6 +24,7 @@ public class VMAPIService: NSObject {
     private var APP_ID = ""
     private var APP_KEY = ""
     private var fileName = ""
+    private var isModelUpdateActive = false
     
     private override init(){
         
@@ -139,6 +140,14 @@ public class VMAPIService: NSObject {
         }
     }
     
+    /**
+     Function remove the model from the device and download it again.
+     */
+    public func updateModel() {
+        isModelUpdateActive = true
+        loadMLModel()
+    }
+    
     private func startDownload(url: String) {
         if let downloadURL = URL(string: url) {
             fileName = downloadURL.lastPathComponent
@@ -164,6 +173,19 @@ public class VMAPIService: NSObject {
         if (!FileManager.default.fileExists(atPath: filePath.path)) {
             modelPath = nil
             return false
+            
+        } else if (isModelUpdateActive) {
+            do {
+                try FileManager.default.removeItem(atPath: filePath.path)
+                isModelUpdateActive = false
+                modelPath = nil
+                return false
+                
+            } catch let error {
+                print(error.localizedDescription)
+                modelPath = nil
+                return false
+            }
         } else {
             modelPath = filePath.path
             delegate?.downloadCompleted?()
