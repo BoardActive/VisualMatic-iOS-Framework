@@ -50,6 +50,7 @@ public class CameraViewController: UIViewController {
     public var delegate: CameraViewControllerDelegate?
     public var EnableScanner: ScannerType = .CustomObject
     public var EnableTabBar: Bool? = true
+    public var showNavigationBar: Bool? = false
 
     var objects: [Object] = []
     var arrOffers: [[String: Any]]?
@@ -79,6 +80,10 @@ public class CameraViewController: UIViewController {
         setUpCaptureSessionInput()
         setUpCaptureSessionOutput()
         selectScanner()
+    }
+    
+    public override func viewWillAppear(_ animated: Bool) {
+        self.navigationController?.setNavigationBarHidden(showNavigationBar, animated: true)
     }
 
     override public func viewDidAppear(_ animated: Bool) {
