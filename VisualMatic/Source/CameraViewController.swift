@@ -83,7 +83,7 @@ public class CameraViewController: UIViewController {
     }
     
     public override func viewWillAppear(_ animated: Bool) {
-        self.navigationController?.setNavigationBarHidden(showNavigationBar, animated: true)
+        self.navigationController?.setNavigationBarHidden(showNavigationBar!, animated: true)
     }
 
     override public func viewDidAppear(_ animated: Bool) {
