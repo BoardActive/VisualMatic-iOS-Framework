@@ -25,6 +25,7 @@ import BAKit
 
 @objc public protocol CameraViewControllerDelegate {
     @objc optional func closeButtonAction()
+    @objc optional func tempEvent()
 }
 
 /**
@@ -45,12 +46,13 @@ public class CameraViewController: UIViewController {
     private lazy var sessionQueue = DispatchQueue(label: Constant.sessionQueueLabel)
     private var lastFrame: CMSampleBuffer?
     private var imagePicker = UIImagePickerController()
+    private var apiActivityIndicator = UIActivityIndicatorView()
 
     //MARK:- Public Variables
     public var delegate: CameraViewControllerDelegate?
     public var EnableScanner: ScannerType = .CustomObject
     public var EnableTabBar: Bool? = true
-    public var showNavigationBar: Bool? = false
+    public var isNavigationbarHidden: Bool? = true
 
     var objects: [Object] = []
     var arrOffers: [[String: Any]]?
@@ -74,6 +76,11 @@ public class CameraViewController: UIViewController {
   // MARK: - View Life Cycle
     override public func viewDidLoad() {
         super.viewDidLoad()
+        apiActivityIndicator.color = .darkGray
+        apiActivityIndicator.hidesWhenStopped = true
+        self.view.addSubview(apiActivityIndicator)
+        apiActivityIndicator.center = CGPoint(x: self.view.center.x, y: self.view.center.y)
+        
         previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
         setUpPreviewOverlayView()
         setUpAnnotationOverlayView()
@@ -83,7 +90,7 @@ public class CameraViewController: UIViewController {
     }
     
     public override func viewWillAppear(_ animated: Bool) {
-        self.navigationController?.setNavigationBarHidden(showNavigationBar!, animated: true)
+        self.navigationController?.setNavigationBarHidden(isNavigationbarHidden!, animated: true)
     }
 
     override public func viewDidAppear(_ animated: Bool) {
@@ -153,25 +160,6 @@ public class CameraViewController: UIViewController {
                 box.tag = tapGesture.objectId!
                 box.addGestureRecognizer(tapGesture)
                 self.annotationOverlayView.insertSubview(box, at: self.annotationOverlayView.subviews.count)
-
-                
-                
-       /*         let normalizedRect = CGRect(x: object.frame.origin.x / width, y: object.frame.origin.y / height, width: object.frame.size.width / width, height: object.frame.size.height / height)
-                let standardizedRect = self.previewLayer.layerRectConverted( fromMetadataOutputRect: normalizedRect).standardized
-                UIUtilities.addRectangle(standardizedRect, to: self.annotationOverlayView, color: UIColor.green)
-                let label = UILabel(frame: standardizedRect)
-                var description = ""
-                if let trackingID = object.trackingID {
-                    description += "Object ID: " + trackingID.stringValue + "\n"
-                }
-                description += object.labels.enumerated().map { (index, label) in
-                  "Label \(index): \(label.text), \(label.confidence), \(label.index)"
-                }.joined(separator: "\n")
-
-                label.text = description
-                label.numberOfLines = 0
-                label.adjustsFontSizeToFitWidth = true
-                self.annotationOverlayView.addSubview(label)*/
             }
         }
     }
@@ -546,11 +534,16 @@ public class CameraViewController: UIViewController {
     }
     
     private func notifyServer(objectName: String) {
+        apiActivityIndicator.startAnimating()
         VMAPIService.sharedVMAPIService.sendScanResult(body: ["brandName":"\(objectName)"]) { (response, error) in
+            DispatchQueue.main.async {
+                self.apiActivityIndicator.stopAnimating()
+            }
             if (error != nil) {
                 print(error)
             } else {
                 print(response)
+//                self.delegate?.tempEvent!()
             }
         }
     }
@@ -614,18 +607,12 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
 
         let options = CustomObjectDetectorOptions(localModel: localModel!)
         options.shouldEnableClassification = true
-        options.shouldEnableMultipleObjects = true
+        options.shouldEnableMultipleObjects = false
         options.detectorMode = .stream
         detectObjectsOnDevice(in: image, width: imageWidth, height: imageHeight, options: options)
     }
     
     private func scanCustomObject(image: VisionImage) {
-//        guard let localModelFilePath = Bundle.main.path( forResource: Constant.localModelFile.name, ofType: Constant.localModelFile.type)
-//        else {
-//            print("Failed to find custom local model file.")
-//            return
-//        }
-//
         var localModel: LocalModel?
         
         if let serverModelPath = VMAPIService.sharedVMAPIService.modelPath {
@@ -708,15 +695,13 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
             }
         }
         print(sender.objectName)
-
     }
     
     private func recognizeText(image: VisionImage, imageBuffer: CVImageBuffer) {
         let width = CGFloat(CVPixelBufferGetWidth(imageBuffer))
         let height = CGFloat(CVPixelBufferGetHeight(imageBuffer))
 
-        
-        print("image height: \(height)")
+//        print("image height: \(height)")
         var recognizedText: Text
         do {
             recognizedText = try TextRecognizer.textRecognizer().results(in: image)
@@ -933,6 +918,7 @@ extension CameraViewController: UIImagePickerControllerDelegate, UINavigationCon
         dismiss(animated: true)
     }
 }
+
 
 
 
