@@ -16,6 +16,7 @@
 		A8D6E1E664CE93C9910C5D2C /* Pods_VisualMatic_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7868E9035DA95461AE5362FA /* Pods_VisualMatic_Tests.framework */; };
 		F100570C2643BD360011199A /* bird.tflite in Resources */ = {isa = PBXBuildFile; fileRef = F100570B2643BD360011199A /* bird.tflite */; };
 		F10057F2264417720011199A /* logo.tflite in Resources */ = {isa = PBXBuildFile; fileRef = F10057F1264417720011199A /* logo.tflite */; };
+		F1106E8426A6A1B200276AD8 /* model.tflite in Resources */ = {isa = PBXBuildFile; fileRef = F1106E8326A6A1B200276AD8 /* model.tflite */; };
 		F199C4E42642ABAC00437B70 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F199C4E32642ABAC00437B70 /* GoogleService-Info.plist */; };
 		F1FB3CFF2642C83F00F3B3B4 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1FB3CFE2642C83F00F3B3B4 /* HomeViewController.swift */; };
 		F1FB3D162642C97000F3B3B4 /* ScannerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1FB3D152642C97000F3B3B4 /* ScannerViewController.swift */; };
@@ -53,6 +54,7 @@
 		F100570B2643BD360011199A /* bird.tflite */ = {isa = PBXFileReference; lastKnownFileType = file; path = bird.tflite; sourceTree = "<group>"; };
 		F10057ED2643EC0A0011199A /* VisualMatic_Example.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = VisualMatic_Example.entitlements; sourceTree = "<group>"; };
 		F10057F1264417720011199A /* logo.tflite */ = {isa = PBXFileReference; lastKnownFileType = file; path = logo.tflite; sourceTree = "<group>"; };
+		F1106E8326A6A1B200276AD8 /* model.tflite */ = {isa = PBXFileReference; lastKnownFileType = file; path = model.tflite; sourceTree = "<group>"; };
 		F199C4E32642ABAC00437B70 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		F1FB3CFE2642C83F00F3B3B4 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		F1FB3D152642C97000F3B3B4 /* ScannerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannerViewController.swift; sourceTree = "<group>"; };
@@ -120,6 +122,7 @@
 				F199C4E32642ABAC00437B70 /* GoogleService-Info.plist */,
 				F100570B2643BD360011199A /* bird.tflite */,
 				F10057F1264417720011199A /* logo.tflite */,
+				F1106E8326A6A1B200276AD8 /* model.tflite */,
 				607FACD41AFB9204008FA782 /* Info.plist */,
 			);
 			name = "Supporting Files";
@@ -288,6 +291,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F1106E8426A6A1B200276AD8 /* model.tflite in Resources */,
 				607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */,
 				F100570C2643BD360011199A /* bird.tflite in Resources */,
 				F199C4E42642ABAC00437B70 /* GoogleService-Info.plist in Resources */,

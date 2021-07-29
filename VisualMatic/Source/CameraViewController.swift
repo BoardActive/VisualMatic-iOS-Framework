@@ -25,7 +25,6 @@ import BAKit
 
 @objc public protocol CameraViewControllerDelegate {
     @objc optional func closeButtonAction()
-    @objc optional func tempEvent()
 }
 
 /**
@@ -65,7 +64,7 @@ public class CameraViewController: UIViewController {
         previewOverlayView.translatesAutoresizingMaskIntoConstraints = false
         return previewOverlayView
     }()
-
+    
     private lazy var annotationOverlayView: UIView = {
         precondition(isViewLoaded)
         let annotationOverlayView = UIView(frame: .zero)
@@ -84,8 +83,8 @@ public class CameraViewController: UIViewController {
         previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
         setUpPreviewOverlayView()
         setUpAnnotationOverlayView()
-        setUpCaptureSessionInput()
         setUpCaptureSessionOutput()
+        setUpCaptureSessionInput()
         selectScanner()
     }
     
@@ -107,6 +106,19 @@ public class CameraViewController: UIViewController {
     override public func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         previewLayer.frame = cameraView.frame
+    }
+    
+    //This method is overridden only for text recognition done by camera.
+    public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        if (EnableScanner == .TextRecognizer && !cameraView.isHidden) {
+            if let viewTemp = touches.first?.view, let labelTemp = viewTemp.viewWithTag(101) as? UILabel {
+                if let selectedText = labelTemp.text {
+                    stopSession()
+                    notifyServer(objectName: selectedText)
+                    showAlert(message: selectedText)
+                }
+            }
+        }
     }
 
     // MARK: - Private methods
@@ -148,7 +160,7 @@ public class CameraViewController: UIViewController {
                     return
                 }
                 
-                print("Object id :\(object.labels.first?.index)")
+                print("Object id :\(String(describing: object.labels.first?.index))")
                 
                 let tapGesture = ObjectTapEvent(target: self, action: #selector(self.cameraObject(sender:)))
                 tapGesture.objectId = object.labels.first?.index
@@ -165,22 +177,29 @@ public class CameraViewController: UIViewController {
     }
 
     private func setUpCaptureSessionOutput() {
+        weak var weakSelf = self
+
         sessionQueue.async {
-            self.captureSession.beginConfiguration()
+            guard let strongSelf = weakSelf else {
+              print("Self is nil!")
+              return
+            }
+
+            strongSelf.captureSession.beginConfiguration()
             // When performing latency tests to determine ideal capture settings,
             // run the app in 'release' mode to get accurate performance metrics
-            self.captureSession.sessionPreset = AVCaptureSession.Preset.medium
+            strongSelf.captureSession.sessionPreset = AVCaptureSession.Preset.medium
             let output = AVCaptureVideoDataOutput()
             output.videoSettings = [(kCVPixelBufferPixelFormatTypeKey as String): kCVPixelFormatType_32BGRA]
             output.alwaysDiscardsLateVideoFrames = true
             let outputQueue = DispatchQueue(label: Constant.videoDataOutputQueueLabel)
-            output.setSampleBufferDelegate(self, queue: outputQueue)
-            guard self.captureSession.canAddOutput(output) else {
+            output.setSampleBufferDelegate(strongSelf, queue: outputQueue)
+            guard strongSelf.captureSession.canAddOutput(output) else {
                 print("Failed to add capture session output.")
                 return
             }
-            self.captureSession.addOutput(output)
-            self.captureSession.commitConfiguration()
+            strongSelf.captureSession.addOutput(output)
+            strongSelf.captureSession.commitConfiguration()
         }
     }
 
@@ -241,30 +260,7 @@ public class CameraViewController: UIViewController {
             annotationOverlayView.trailingAnchor.constraint(equalTo: cameraView.trailingAnchor),
             annotationOverlayView.bottomAnchor.constraint(equalTo: cameraView.bottomAnchor)])
     }
-    
-    
-  /*  override public func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        let touch = touches.first!
-        let location = touch.location(in: self.annotationOverlayView)
         
-        for annotationView in annotationOverlayView.subviews {
-            if annotationView.frame.contains(location) {
-                print("GOT")
-                btnClose.isHidden = false
-                stopSession()
-                let image3 = self.previewOverlayView.image!
-                var fr = annotationView.frame
-                if isiPhoneNotHaveHomeButton() {
-                    fr.origin.y =  fr.origin.y-110
-                } else {
-                    fr.origin.y =  fr.origin.y-40
-                }
-                self.postLocal(brand: "Rolex")
-                break
-            }
-        }
-    }*/
-    
     func postLocal(brand: String) {
         activityView = UIActivityIndicatorView(style: .white)
         activityView?.center = self.view.center
@@ -303,7 +299,7 @@ public class CameraViewController: UIViewController {
       let discoverySession = AVCaptureDevice.DiscoverySession(
         deviceTypes: [.builtInWideAngleCamera],
         mediaType: .video,
-        position: .unspecified
+        positio as Anyn: .unspecified
       )
       return discoverySession.devices.first { $0.position == position }
     }
@@ -534,16 +530,15 @@ public class CameraViewController: UIViewController {
     }
     
     private func notifyServer(objectName: String) {
-        apiActivityIndicator.startAnimating()
+        UIApplication.shared.isNetworkActivityIndicatorVisible = true
         VMAPIService.sharedVMAPIService.sendScanResult(body: ["brandName":"\(objectName)"]) { (response, error) in
             DispatchQueue.main.async {
-                self.apiActivityIndicator.stopAnimating()
+                UIApplication.shared.isNetworkActivityIndicatorVisible = false
             }
             if (error != nil) {
                 print(error)
             } else {
                 print(response)
-//                self.delegate?.tempEvent!()
             }
         }
     }
@@ -570,7 +565,7 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
     
     public func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         guard let imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else {
-            print("Failed to get image buffer from sample buffer.")
+            as Any        print("Failed to get image buffer from sample as Any buffer.")
             return
         }
         lastFrame = sampleBuffer
@@ -622,8 +617,6 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
             localModel = LocalModel(path: testModelPath)
         }
 
-
-//        let localModel = LocalModel(path: localModelFilePath)
         let options = CustomObjectDetectorOptions(localModel: localModel!)
         options.shouldEnableClassification = true
         options.shouldEnableMultipleObjects = true
@@ -662,7 +655,7 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
     
     @objc func galleryObject(sender: ObjectTapEvent) {
         if (EnableScanner == .CustomObject) {
-            if let message = sender.objectName, sender.objectId != 0 {
+            if let message = sender.objectName {
                 notifyServer(objectName: message)
                 showAlert(message: message)
             } else {
@@ -694,14 +687,12 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
                 showAlert(message: message)
             }
         }
-        print(sender.objectName)
     }
     
     private func recognizeText(image: VisionImage, imageBuffer: CVImageBuffer) {
         let width = CGFloat(CVPixelBufferGetWidth(imageBuffer))
-        let height = CGFloat(CVPixelBufferGetHeight(imageBuffer))
-
-//        print("image height: \(height)")
+        let height = CGFloat(CVPixelBufferGetH as Anyeight(imageBuffer))
+        
         var recognizedText: Text
         do {
             recognizedText = try TextRecognizer.textRecognizer().results(in: image)
@@ -721,29 +712,24 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
                 for line in block.lines {
                     // Elements.
                     for element in line.elements {
-                        let tapGesture = ObjectTapEvent(target: self, action: #selector(self.cameraObject(sender:)))
-                        tapGesture.objectName = element.text
-
+                        
                         let normalizedRect = CGRect(x: element.frame.origin.x / width, y: element.frame.origin.y / height, width: element.frame.size.width / width, height: element.frame.size.height / height)
                         let standardizedRect = self.previewLayer.layerRectConverted( fromMetadataOutputRect: normalizedRect)
+                        let label = UILabel(frame: standardizedRect)
+                        label.text = element.text
+                        label.adjustsFontSizeToFitWidth = true
+                        label.textColor = .clear
+                        label.tag = 101
+                        
                         let box = UIUtilities.addRectangle(standardizedRect, borderColor: .white)
-                        box.addGestureRecognizer(tapGesture)
+                        box.addSubview(label)
                         self.annotationOverlayView.addSubview(box)
-
-
-//                        let normalizedRect = CGRect(x: element.frame.origin.x / width, y: element.frame.origin.y / height, width: element.frame.size.width / width, height: element.frame.size.height / height)
-//                        let convertedRect = self.previewLayer.layerRectConverted(fromMetadataOutputRect: normalizedRect)
-//                        UIUtilities.addRectangle(convertedRect, to: self.annotationOverlayView, color: UIColor.green)
-//                        let label = UILabel(frame: convertedRect)
-//                        label.text = element.text
-//                        label.adjustsFontSizeToFitWidth = true
-//                        self.annotationOverlayView.addSubview(label)
                     }
                 }
             }
         }
     }
-    
+
     
     private func recognizeText(image: VisionImage) {
         let textRecognizer = TextRecognizer.textRecognizer()
@@ -754,7 +740,6 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
             }
             
             DispatchQueue.main.async {
-//                self.removeBoxFromImageView()
                 self.removeDetectionAnnotations()
             }
             
@@ -793,14 +778,10 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
             print("Failed to scan barcodes with error: \(error.localizedDescription).")
             return
         }
-        weak var weakSelf = self
+        
         DispatchQueue.main.sync {
-            guard let strongSelf = weakSelf else {
-                print("Self is nil!")
-                return
-            }
-            strongSelf.updatePreviewOverlayViewWithLastFrame()
-            strongSelf.removeDetectionAnnotations()
+            self.updatePreviewOverlayView()
+            self.removeDetectionAnnotations()
         }
         
         guard !barcodes.isEmpty else {
@@ -818,17 +799,6 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
                 let box = UIUtilities.addRectangle(standardizedRect, borderColor: .white)
                 self.annotationOverlayView.addGestureRecognizer(tapGesture)
                 self.annotationOverlayView.addSubview(box)
-                
-                
-            /*    let normalizedRect = CGRect(x: barcode.frame.origin.x / width, y: barcode.frame.origin.y / height, width: barcode.frame.size.width / width, height: barcode.frame.size.height / height)
-                let convertedRect = strongSelf.previewLayer.layerRectConverted(fromMetadataOutputRect: normalizedRect)
-                UIUtilities.addRectangle(convertedRect, to: strongSelf.annotationOverlayView, color: UIColor.green)
-                let label = UILabel(frame: convertedRect)
-                label.text = barcode.rawValue
-                label.adjustsFontSizeToFitWidth = true
-                strongSelf.rotate(label, orientation: image.orientation)
-                strongSelf.annotationOverlayView.addSubview(label)
-                print("Barcode value: \(barcode.rawValue)")*/
             }
         }
     }
@@ -859,13 +829,6 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
                 let box = UIUtilities.addRectangle(standardizedRect, borderColor: .systemGreen)
                 box.addGestureRecognizer(tapGesture)
                 self.imgObject.addSubview(box)
-
-//                let normalizedRect = CGRect(x: barcode.frame.origin.x / width, y: barcode.frame.origin.y / height, width: barcode.frame.size.width / width, height: barcode.frame.size.height / height)
-//                let standardizedRect = self.previewLayer.layerRectConverted( fromMetadataOutputRect: normalizedRect).standardized
-//                let box = UIUtilities.addRectangle(standardizedRect, borderColor: .white)
-//                self.annotationOverlayView.addGestureRecognizer(tapGesture)
-//                self.annotationOverlayView.addSubview(box)
-
             }
         }
     }
@@ -886,15 +849,6 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
                 print("no orientation")
         }
         view.transform = CGAffineTransform.init(rotationAngle: degree * 3.141592654 / 180)
-    }
-    
-    private func updatePreviewOverlayViewWithLastFrame() {
-      guard let lastFrame = lastFrame,
-        let imageBuffer = CMSampleBufferGetImageBuffer(lastFrame)
-      else {
-        return
-      }
-      self.updatePreviewOverlayViewWithImageBuffer(imageBuffer)
     }
 
     private func updatePreviewOverlayViewWithImageBuffer(_ imageBuffer: CVImageBuffer?) {
@@ -918,7 +872,6 @@ extension CameraViewController: UIImagePickerControllerDelegate, UINavigationCon
         dismiss(animated: true)
     }
 }
-
 
 
 

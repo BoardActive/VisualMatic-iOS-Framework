@@ -1,17 +1,8 @@
 //
-//  Copyright (c) 2018 Google Inc.
+//  UIUtilities.swift
+//  VisualMatic
 //
-//  Licensed under the Apache License, Version 2.0 (the "License");
-//  you may not use this file except in compliance with the License.
-//  You may obtain a copy of the License at
-//
-//  http://www.apache.org/licenses/LICENSE-2.0
-//
-//  Unless required by applicable law or agreed to in writing, software
-//  distributed under the License is distributed on an "AS IS" BASIS,
-//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-//  See the License for the specific language governing permissions and
-//  limitations under the License.
+//  Created by Indrajeet Senger on 12/05/21.
 //
 
 import AVFoundation
@@ -21,19 +12,6 @@ import UIKit
 public class UIUtilities {
 
   // MARK: - Public
-
-    public static func addCircle( atPoint point: CGPoint, to view: UIView, color: UIColor, radius: CGFloat) {
-        let divisor: CGFloat = 2.0
-        let xCoord = point.x - radius / divisor
-        let yCoord = point.y - radius / divisor
-        let circleRect = CGRect(x: xCoord, y: yCoord, width: radius, height: radius)
-        let circleView = UIView(frame: circleRect)
-        circleView.layer.cornerRadius = radius / divisor
-        circleView.alpha = Constants.circleViewAlpha
-        circleView.backgroundColor = color
-        view.addSubview(circleView)
-    }
-
     public static func addRectangle(_ rectangle: CGRect, to view: UIView, color: UIColor) {
         guard rectangle.isValid() else { return }
         let rectangleView = UIView(frame: rectangle)
@@ -51,31 +29,6 @@ public class UIUtilities {
         rectangleView.layer.borderColor = borderColor.cgColor
         rectangleView.backgroundColor = .clear
         return rectangleView
-    }
-
-
-    public static func addShape(withPoints points: [NSValue]?, to view: UIView, color: UIColor) {
-        guard let points = points else { return }
-        let path = UIBezierPath()
-        for (index, value) in points.enumerated() {
-            let point = value.cgPointValue
-            if index == 0 {
-                path.move(to: point)
-            } else {
-                path.addLine(to: point)
-            }
-            if index == points.count - 1 {
-                path.close()
-            }
-        }
-        let shapeLayer = CAShapeLayer()
-        shapeLayer.path = path.cgPath
-        shapeLayer.fillColor = color.cgColor
-        let rect = CGRect(x: 0, y: 0, width: view.frame.size.width, height: view.frame.size.height)
-        let shapeView = UIView(frame: rect)
-        shapeView.alpha = Constants.shapeViewAlpha
-        shapeView.layer.addSublayer(shapeLayer)
-        view.addSubview(shapeView)
     }
 
     public static func imageOrientation( fromDevicePosition devicePosition: AVCaptureDevice.Position = .back) -> UIImage.Orientation {
@@ -139,4 +92,3 @@ public class UIUtilities {
         return deviceOrientation()
     }
 }
-

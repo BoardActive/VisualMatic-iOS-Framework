@@ -25,9 +25,13 @@ public class VMAPIService: NSObject {
     private var APP_KEY = ""
     private var fileName = ""
     private var isModelUpdateActive = false
+    private var modelUpdateDate: String?
+    private var apiModelUpdatedDate: String?
     
     private override init(){
-        
+        if let storedModelUpdateDate = UserDefaults.standard.value(forKey: UserdefaultKey.modelUpdateDate) as? String {
+            modelUpdateDate =  storedModelUpdateDate
+        }
     }
 
     public func setupVisualMatic(appId id: String, appkey key: String){
@@ -125,7 +129,9 @@ public class VMAPIService: NSObject {
                 if let responseData = data {
                     do {
                         let jsonData = try JSONSerialization.jsonObject(with: responseData, options: []) as! [String: Any]
-                        if let downloadURL = jsonData["url"] as? String {
+                        
+                        if let downloadURL = jsonData["url"] as? String, let lastUpdatedDate = jsonData["dateLastUpdated"] as? String {
+                            self.apiModelUpdatedDate = lastUpdatedDate
                             self.startDownload(url: downloadURL)
                         } else {
                             let error = NSError(domain: "", code: 1000, userInfo: ["errorMessage": "Download url is not exist."])
@@ -152,6 +158,8 @@ public class VMAPIService: NSObject {
         if let downloadURL = URL(string: url) {
             fileName = downloadURL.lastPathComponent
             if (!isModelExist()) {
+                UserDefaults.standard.setValue(apiModelUpdatedDate!, forKey: "modelUdateDate")
+                modelUpdateDate =  apiModelUpdatedDate!
                 let configuration = URLSessionConfiguration.default
                 let operationQueue = OperationQueue()
                 let session = URLSession(configuration: configuration, delegate: self, delegateQueue: operationQueue)
@@ -175,23 +183,30 @@ public class VMAPIService: NSObject {
             return false
             
         } else if (isModelUpdateActive) {
-            do {
-                try FileManager.default.removeItem(atPath: filePath.path)
-                isModelUpdateActive = false
-                modelPath = nil
-                return false
-                
-            } catch let error {
-                print(error.localizedDescription)
-                modelPath = nil
-                return false
-            }
+            return updateModel(strFilePath: filePath.path)
+            
+        } else if (modelUpdateDate != apiModelUpdatedDate) {
+            return updateModel(strFilePath: filePath.path)
+            
         } else {
             modelPath = filePath.path
             delegate?.downloadCompleted?()
             return true
         }
-
+    }
+    
+    private func updateModel(strFilePath: String) -> Bool {
+        do {
+            try FileManager.default.removeItem(atPath: strFilePath)
+            isModelUpdateActive = false
+            modelPath = nil
+            return false
+            
+        } catch let error {
+            print(error.localizedDescription)
+            modelPath = nil
+            return false
+        }
     }
 }
 
@@ -223,3 +238,4 @@ extension VMAPIService: URLSessionDownloadDelegate {
         }
     }
 }
+

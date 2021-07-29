@@ -35,8 +35,7 @@ extension String {
         static let ApplicationJSON = "application/json"
         static let GzipDeflate = "gzip, deflate"
         static let KeepAlive = "keep-alive"
-//        static let DevHostKey = "springer-api.boardactive.com"
-        static let DevHostKey = "boardactiveapi.dev.radixweb.net"
+        static let DevHostKey = "dev-api.boardactive.com"
         static let ProdHostKey = "api.boardactive.com"
         static let iOS = "iOS"
         static let DeviceOSVersion = UIDevice.current.systemVersion
@@ -95,5 +94,3 @@ extension CGRect {
       || origin.x < 0 || origin.y < 0)
   }
 }
-
-

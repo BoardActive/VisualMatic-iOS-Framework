@@ -22,19 +22,14 @@ enum Constants {
  Development and production base urls with their associated end points.
  */
 enum APIEndPoints {
-//    static let BaseURL = "https://dev-api.boardactive.com/mobile/v1"
-    static let BaseURL = "https://boardactiveapi.dev.radixweb.net/mobile/v1"
+    static let BaseURL = "https://dev-api.boardactive.com/mobile/v1"
     static let Scans = "/scans"
     static let Models = "/models"
 }
 
 enum Constant {
-    static let alertControllerTitle = "Vision Detectors"
-    static let alertControllerMessage = "Select a detector"
-    static let cancelActionTitleText = "Cancel"
-    static let videoDataOutputQueueLabel = "com.google.mlkit.visiondetector.VideoDataOutputQueue"
-    static let sessionQueueLabel = "com.google.mlkit.visiondetector.SessionQueue"
-    static let noResultsMessage = "No Results"
+    static let videoDataOutputQueueLabel = "com.boardactive.visualmatic.visiondetector.VideoDataOutputQueue"
+    static let sessionQueueLabel = "com.boardactive.visualmatic.visiondetector.SessionQueue"
     static let localModelFile = (name: "bird", type: "tflite")
     static let labelConfidenceThreshold: Float = 0.75
     static let smallDotRadius: CGFloat = 4.0
@@ -42,6 +37,10 @@ enum Constant {
     static let padding: CGFloat = 10.0
     static let resultsLabelHeight: CGFloat = 200.0
     static let resultsLabelLines = 5
+}
+
+enum UserdefaultKey {
+    static let modelUpdateDate = "modelUdateDate"
 }
 
 /**
@@ -52,3 +51,4 @@ public enum ScannerType: Int {
     case TextRecognizer = 102
     case BarcodeScanner = 104
 }
+
