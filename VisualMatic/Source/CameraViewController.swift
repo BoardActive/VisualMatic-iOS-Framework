@@ -299,7 +299,7 @@ public class CameraViewController: UIViewController {
       let discoverySession = AVCaptureDevice.DiscoverySession(
         deviceTypes: [.builtInWideAngleCamera],
         mediaType: .video,
-        positio as Anyn: .unspecified
+        position: .unspecified
       )
       return discoverySession.devices.first { $0.position == position }
     }
@@ -565,7 +565,7 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
     
     public func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         guard let imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else {
-            as Any        print("Failed to get image buffer from sample as Any buffer.")
+            print("Failed to get image buffer from sample buffer.")
             return
         }
         lastFrame = sampleBuffer
@@ -691,8 +691,8 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
     
     private func recognizeText(image: VisionImage, imageBuffer: CVImageBuffer) {
         let width = CGFloat(CVPixelBufferGetWidth(imageBuffer))
-        let height = CGFloat(CVPixelBufferGetH as Anyeight(imageBuffer))
-        
+        let height = CGFloat(CVPixelBufferGetHeight(imageBuffer))
+
         var recognizedText: Text
         do {
             recognizedText = try TextRecognizer.textRecognizer().results(in: image)
