@@ -14,14 +14,17 @@ class HomeViewController: UIViewController {
     @IBOutlet weak var btnScanOutlet: UIButton!
     @IBOutlet weak var btnUpdateModelOutlet: UIButton!
     @IBOutlet weak var lblProgressPercent: UILabel!
+    @IBOutlet weak var lblAccuracyValue: UILabel!
     @IBOutlet weak var progressView: UIProgressView!
 
     var progress = Progress(totalUnitCount: 100)
-
+    private var currentAccuracy: Float = 0.0
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         progressView.progress = 0.0
         progress.completedUnitCount = 0
+        lblAccuracyValue.text = "\(currentAccuracy * 100)%"
 
         manageControlVisibility(isModelLoaded: false)
         VMAPIService.sharedVMAPIService.delegate = self
@@ -48,6 +51,7 @@ class HomeViewController: UIViewController {
         let controller = storyboard.instantiateViewController(withIdentifier: "CameraViewController") as! CameraViewController
         controller.delegate = self
         controller.EnableTabBar = true
+        controller.accuracy = currentAccuracy
         self.present(controller, animated: true, completion: nil)
     }
     
@@ -60,13 +64,10 @@ class HomeViewController: UIViewController {
         VMAPIService.sharedVMAPIService.updateModel()
     }
     
-//    @IBAction func btnRecogniseText(sender: UIButton){
-//        openCamera(type: .TextRecognizer)
-//    }
-//
-//    @IBAction func btnScanBarcode(sender: UIButton) {
-//        openCamera(type: .BarcodeScanner)
-//    }
+    @IBAction func sliderChangeEvent(sender: UISlider) {
+        currentAccuracy = sender.value
+        lblAccuracyValue.text = "\(currentAccuracy * 100)%"
+    }
     
     private func openCamera(type: ScannerType){
     }

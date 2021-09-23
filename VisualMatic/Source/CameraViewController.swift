@@ -52,6 +52,9 @@ public class CameraViewController: UIViewController {
     public var EnableScanner: ScannerType = .CustomObject
     public var EnableTabBar: Bool? = true
     public var isNavigationbarHidden: Bool? = true
+    
+    //For better result keep the value between 80 and 90.
+    public var accuracy: Float = 0.0
 
     var objects: [Object] = []
     var arrOffers: [[String: Any]]?
@@ -147,6 +150,7 @@ public class CameraViewController: UIViewController {
 //            self.removeDetectionAnnotations()
 
             for object in objects {
+
                 guard let idTemp = object.labels.first?.index else {
                     return
                 }
@@ -160,6 +164,12 @@ public class CameraViewController: UIViewController {
                     return
                 }
                 
+                print("object name: \(object.labels.first?.text ?? "") accuracy: \(object.labels.first?.confidence ?? 0.0)")
+                
+                if ((object.labels.first?.confidence ?? 0.0) < self.accuracy) {
+                    continue
+                }
+                                
                 print("Object id :\(String(describing: object.labels.first?.index))")
                 
                 let tapGesture = ObjectTapEvent(target: self, action: #selector(self.cameraObject(sender:)))
@@ -623,7 +633,7 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
         options.detectorMode = .singleImage
                 
         let detector = ObjectDetector.objectDetector(options: options)
-        detector.process(image) { (objects, error) in
+        detector.process(image) { [self] (objects, error) in
             
             if (error != nil) {
                 print(error!.localizedDescription)
@@ -640,6 +650,11 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
             }
             
             for object in objects! {
+                print("object name: \(object.labels.first?.text ?? "") accuracy: \(object.labels.first?.confidence ?? 0.0)")
+                if ((object.labels.first?.confidence ?? 0.0) < self.accuracy) {
+                    continue
+                }
+                
                 let tapGesture = ObjectTapEvent(target: self, action: #selector(self.galleryObject(sender:)))
                 tapGesture.objectId = object.labels.first?.index ?? 0
                 tapGesture.objectName = object.labels.first?.text ?? ""
