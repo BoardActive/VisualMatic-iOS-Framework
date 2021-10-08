@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import BAKit
 
 /**
  Constant values used through the sdk.
@@ -22,7 +23,7 @@ enum Constants {
  Development and production base urls with their associated end points.
  */
 enum APIEndPoints {
-    static let BaseURL = "https://dev-api.boardactive.com/mobile/v1"
+    static let BaseURL = BoardActive.client.isDevEnv ? "https://dev-api.boardactive.com/mobile/v1" : "https://api.boardactive.com/mobile/v1"
     static let Scans = "/scans"
     static let Models = "/models"
 }

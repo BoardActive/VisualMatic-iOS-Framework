@@ -52,7 +52,6 @@ public class VMAPIService: NSObject {
         APP_KEY = BoardActive.client.userDefaults?.string(forKey: String.ConfigKeys.AppKey) ?? ""
         APP_ID = BoardActive.client.userDefaults?.string(forKey: String.ConfigKeys.AppId) ?? ""
 
-
         let headers: [String: String] = [
             String.HeaderKeys.AcceptEncodingHeader: String.HeaderValues.GzipDeflate,
             String.HeaderKeys.AcceptHeader: String.HeaderValues.WildCards,

@@ -34,6 +34,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         BoardActive.client.userDefaults?.set("280", forKey: "AppId")
         // AppKey is of type String
         BoardActive.client.userDefaults?.set("d17f0feb-4f96-4c2a-83fd-fd6302ae3a16", forKey: "AppKey")
+        BoardActive.client.isDevEnv = true
 //        VMAPIService.sharedVMAPIService.setupVisualMatic(appId: "242", appkey: "79eb70da-4162-4cc6-a9a7-689459fa8484")
 //        VMAPIService.sharedVMAPIService.setupVisualMatic(appId: "1", appkey: "d17f0feb-4f96-4c2a-83fd-fd6302ae3a16")
         setupSDK()
